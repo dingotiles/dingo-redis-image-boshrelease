@@ -1,0 +1,61 @@
+---
+groups:
+- name: images
+  jobs: [bump-layers, testflight, shipit, image-pg95]
+
+jobs:
+- name: bump-layers
+  public: true
+  serial_groups: [boshrelease]
+  plan:
+  - aggregate:
+    - {get: dingo-postgresql95, trigger: true, params: {save: true}}
+    - {get: boshrelease}
+    - {get: boshrelease-ci}
+    - {get: trigger-bump-layers, trigger: true}
+  - task: bump-image-blob
+    file: boshrelease-ci/ci/tasks/bump-image-layers.yml
+    params:
+      aws_access_key_id: {{blobstore-aws-access}}
+      aws_secret_access_key: {{blobstore-aws-secret}}
+  - put: boshrelease
+    params: {repository: boshrelease-images-updated, rebase: true}
+
+resources:
+- name: boshrelease
+  type: git
+  source:
+    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    branch: {{pipeline-branch}}
+    private_key: {{github-private-key}}
+
+- name: boshrelease-ci
+  type: git
+  source:
+    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    branch: {{pipeline-branch}}
+    private_key: {{github-private-key}}
+
+- name: trigger-bump-layers
+  type: git
+  source:
+    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    branch: trigger-jobs
+    private_key: {{github-private-key}}
+    paths: [bump-layers]
+
+- name: boshrelease-ci-task
+  type: git
+  source:
+    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    branch: {{pipeline-branch}}
+    private_key: {{github-private-key}}
+    paths: [ci/ci_image/*]
+
+- name: dingo-postgresql95
+  type: docker-image
+  source:
+    email: {{docker-hub-email}}
+    username: {{docker-hub-username}}
+    password: {{docker-hub-password}}
+    repository: dingotiles/dingo-postgresql95
