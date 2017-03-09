@@ -72,10 +72,10 @@ docker_layers/fab33e639ad59fc0388b94c537f0d9acffe22ddf6bb74df1e6a923138cb7965b.t
   sha: 6dd1a12683b1efb39f102d917016ce4b57abd629
   size: 71345
 docker_images/8587c66b6f0bab7113fc695ebc005e6fded05ccf23de72820e9e44f4da6bad68.json.tgz:
-  object_id: c26ad61a-98c2-423f-810f-13225936791b
-  sha: f4d201a4376f4567a16aad92df679df5b6bf7b1f
+  object_id: 237885fe-ef48-4bff-a5e1-2d0a70792a9a
+  sha: 3c063f876692c83b37d4bc445b9a1706ebd8ee7d
   size: 3185
 docker_images/dingotiles_dingo_postgresql95_latest_image.tgz:
-  object_id: 54a00283-34a5-488d-8ab4-f05f2f4b332e
-  sha: 83a814cb376d9112c434617b4e1eedddbc3c6f4a
-  size: 969
+  object_id: 5c277d57-699e-4b38-a371-01b974f6aba3
+  sha: 2d7fae312ee370c811dd838fba7d15ac53e82c2f
+  size: 970
