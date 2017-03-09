@@ -2,6 +2,7 @@
 
 set -e -x -u
 
+base_dir=$PWD
 manifest_dir=$PWD/manifest
 
 release_name=${release_name:-"dingo-postgresql-image"}
@@ -24,8 +25,9 @@ mkdir -p tmp
 cat >tmp/release.yml <<YAML
 ---
 releases:
-  - name: ${release_name}
-    version: ${candidate_release_version}
+- name: ${release_name}
+  version: ${candidate_release_version}
+  file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
 YAML
 cat >tmp/other-releases.yml <<YAML
 ---
@@ -36,7 +38,7 @@ YAML
 boshreleases=("dingo-postgresql" "etcd" "simple-remote-syslog")
 for boshrelease in "${boshreleases[@]}"; do
   regexp="${boshrelease}-(.*)\.tgz"
-  file=$(ls dingo-postgresql-release/${boshrelease}*)
+  file=$(ls $base_dir/dingo-postgresql-release/${boshrelease}*)
   if [[ $file =~ $regexp ]]; then
     release_version="${BASH_REMATCH[1]}"
   else
