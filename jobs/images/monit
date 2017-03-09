@@ -1,0 +1,5 @@
+check process images
+  with pidfile /var/vcap/sys/run/images/images.pid
+  start program "/var/vcap/jobs/images/bin/monit_debugger install_ctl '/var/vcap/jobs/images/bin/install_ctl start'"
+  stop program "/var/vcap/jobs/images/bin/monit_debugger install_ctl '/var/vcap/jobs/images/bin/install_ctl stop'"
+  group vcap
