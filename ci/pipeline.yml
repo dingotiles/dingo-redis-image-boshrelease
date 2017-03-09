@@ -1,7 +1,7 @@
 ---
 groups:
 - name: images
-  jobs: [bump-layers]
+  jobs: [bump-layers, bosh-rc]
 
 jobs:
 - name: bump-layers
@@ -13,7 +13,6 @@ jobs:
     - {get: dingo-postgresql-release, params: {globs: [x]}}
     - {get: boshrelease}
     - {get: boshrelease-ci}
-    # - {get: trigger-bump-layers, trigger: true}
   - task: bump-image-blob
     file: boshrelease-ci/ci/tasks/bump-image-layers.yml
     params:
@@ -21,6 +20,45 @@ jobs:
       aws_secret_access_key: {{blobstore-aws-secret}}
   - put: boshrelease
     params: {repository: boshrelease-images-updated, rebase: true}
+  - {put: version, params: {pre: rc}}
+
+- name: bosh-rc
+  public: true
+  plan:
+  - aggregate:
+    - {get: boshrelease-ci}
+    - {get: boshrelease, passed: [bump-layers], trigger: true}
+    - {get: version, passed: [bump-layers], trigger: true}
+  - task: create-candidate-release
+    file: boshrelease-ci/ci/tasks/create-candidate-release.yml
+    params:
+      aws_access_key_id: {{dingotiles-aws-access}}
+      aws_secret_access_key: {{dingotiles-aws-secret}}
+  - put: candidate-release
+    params: {file: candidate-release/dingo-postgresql-*.tgz}
+
+# - name: testflight
+#   public: true
+#   serial: true
+#   plan:
+#   - aggregate:
+#     - {get: boshrelease-ci}
+#     - {get: boshrelease, passed: [create-release], trigger: true}
+#     - {get: dingo-postgresql-release, passed: [create-release]}
+#   - task: create-lite-manifest
+#     file: boshrelease-ci/ci/tasks/create-manifest.yml
+#     params:
+#       deployment_name: dingo-postgresql-testflight
+#       bosh_target: {{bosh-lite-testflight-target}}
+#       bosh_username: {{bosh-lite-username}}
+#       bosh_password: {{bosh-lite-password}}
+#       bosh_syslog_host: {{bosh-lite-syslog-host}}
+#       bosh_syslog_port: {{bosh-lite-syslog-port}}
+#       aws_access_key: {{dingotiles-aws-access}}
+#       aws_secret_key: {{dingotiles-aws-secret}}
+#       backups_bucket: {{backups-testflight-backups-bucket}}
+#       clusterdata_bucket: {{backups-testflight-clusterdata-bucket}}
+#       region: {{backups-testflight-s3-region}}
 
 resources:
 - name: boshrelease
@@ -37,14 +75,6 @@ resources:
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
 
-# - name: trigger-bump-layers
-#   type: git
-#   source:
-#     uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
-#     branch: trigger-jobs
-#     private_key: {{github-private-key}}
-#     paths: [bump-layers]
-#
 - name: dingo-postgresql95
   type: docker-image
   source:
@@ -59,3 +89,22 @@ resources:
     user: dingotiles
     repository: dingo-postgresql-release
     access_token: {{github-release-access-token}}
+
+- name: version
+  type: semver
+  source:
+    driver: git
+    initial_version: 0.10.2
+    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    branch: version
+    file: version
+    private_key: {{github-private-key}}
+
+- name: candidate-release
+  type: s3
+  source:
+    bucket: dingo-postgresql-image-release-candidates
+    regexp: dingo-postgresql-image-(.*).tgz
+    access_key_id: {{dingotiles-aws-access}}
+    secret_access_key: {{dingotiles-aws-secret}}
+    region_name: {{dingotiles-aws-region}}
