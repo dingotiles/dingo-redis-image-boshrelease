@@ -22,7 +22,9 @@ blobstore:
     secret_access_key: ${aws_secret_access_key}
 EOF
 
-bosh -n sync blobs
+cat > config/blobs.yml << EOF
+--- {}
+EOF
 
 rake images:cleanout
 rake images:package

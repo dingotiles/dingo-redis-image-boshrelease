@@ -10,6 +10,7 @@ jobs:
   plan:
   - aggregate:
     - {get: dingo-postgresql95, trigger: true, params: {save: true}}
+    - {get: dingo-postgresql-release, params: {globs: [x]}}
     - {get: boshrelease}
     - {get: boshrelease-ci}
     # - {get: trigger-bump-layers, trigger: true}
@@ -51,3 +52,10 @@ resources:
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
     repository: dingotiles/dingo-postgresql95
+
+- name: dingo-postgresql-release
+  type: github-release
+  source:
+    user: dingotiles
+    repository: dingo-postgresql-release
+    access_token: {{github-release-access-token}}

@@ -7,6 +7,7 @@ image_resource:
 inputs:
 - name: boshrelease
 - name: boshrelease-ci
+- name: dingo-postgresql-release
 - name: dingo-postgresql95
   path: images/dingotiles_dingo_postgresql95_latest_image
 
