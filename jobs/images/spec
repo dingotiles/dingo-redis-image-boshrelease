@@ -2,6 +2,7 @@
 name: images
 packages:
 - dingo_postgresql95_image
+- dingotiles_dingo_postgresql95_latest_image
 templates:
   bin/monit_debugger: bin/monit_debugger
   bin/install_ctl: bin/install_ctl
