@@ -3,7 +3,7 @@ require 'json'
 require 'fileutils'
 require 'tmpdir'
 
-DOCKER_IMAGES_JOB = "postgresql_images"
+DOCKER_IMAGES_JOB = "images"
 
 namespace :jobs do
   desc "Update #{DOCKER_IMAGES_JOB} job spec"
