@@ -2,10 +2,10 @@
 
 set -e -x -u
 
-release_name=${release_name:-"dingo-postgresql-image"}
 manifest_dir=$PWD/manifest
 
-dingo_postgresql_version=$(cat dingo-postgresql-release/version)
+release_name=${release_name:-"dingo-postgresql-image"}
+candidate_release_version=$(cat candidate-release/version)
 
 cat > ~/.bosh_config <<EOF
 ---
@@ -21,13 +21,13 @@ EOF
 cd boshrelease-ci
 mkdir -p tmp
 
-cat >tile/tmp/metadata/release.yml <<YAML
+cat >tmp/release.yml <<YAML
 ---
 releases:
   - name: ${release_name}
-    version: latest
+    version: ${candidate_release_version}
 YAML
-cat >tile/tmp/metadata/other-releases.yml <<YAML
+cat >tmp/other-releases.yml <<YAML
 ---
 releases:
 YAML
@@ -50,5 +50,50 @@ for boshrelease in "${boshreleases[@]}"; do
 YAML
 done
 
-spruce merge tile/tmp/metadata/other-releases.yml \
-  tile/tmp/metadata/other-releases.yml
+cat > tmp/docker_image.yml <<EOF
+meta:
+  docker_image:
+    image: ${docker_image_image}
+    tag: "${docker_image_tag}"
+EOF
+
+cat > tmp/backups.yml <<EOF
+---
+meta:
+  backups:
+    aws_access_key: "${aws_access_key}"
+    aws_secret_key: "${aws_secret_key}"
+    backups_bucket: "${backups_bucket}"
+    clusterdata_bucket: "${clusterdata_bucket}"
+    region: "${region}"
+EOF
+
+cat > tmp/cf.yml <<EOF
+---
+meta:
+  cf:
+    api_url: https://api.system.test-cf.snw
+    skip_ssl_validation: true
+    skip_ssl_verification: true
+    username: admin
+    password: A8tb4yRlQ3BmKmc1TQSCgiN7rAQXiQ73PkeoyI1qGTHq8y523kPZWjGyedjal6kx
+properties:
+  servicebroker:
+    service_id: beb5973c-e1b2-11e5-a736-c7c0b526363d
+EOF
+cat tmp/cf.yml
+
+services_template=templates/services-cluster-backup-s3.yml
+# services_template=templates/services-cluster.yml
+
+bosh target ${bosh_target}
+
+export DEPLOYMENT_NAME=${deployment_name}
+./templates/make_manifest warden ${docker_image_source} ${services_template} \
+  templates/jobs-etcd.yml templates/integration-test.yml templates/cf.yml \
+  tmp/syslog.yml tmp/docker_image.yml tmp/backups.yml \
+  tmp/release.yml tmp/other-releases.yml tmp/cf.yml
+
+cp tmp/${DEPLOYMENT_NAME}*.yml ${manifest_dir}/manifest.yml
+
+cat ${manifest_dir}/manifest.yml
