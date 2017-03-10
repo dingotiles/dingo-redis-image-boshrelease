@@ -84,6 +84,50 @@ jobs:
         bosh_username: {{bosh-lite-username}}
         bosh_password: {{bosh-lite-password}}
 
+- name: shipit
+  serial_groups: [version]
+  public: true
+  plan:
+  - aggregate:
+    - {get: boshrelease-ci}
+    - {get: boshrelease, passed: [testflight]}
+    - {get: candidate-release, passed: [testflight]}
+    - {get: version, passed: [testflight], params: {bump: final}}
+  - task: create-final-release
+    file: boshrelease-ci/ci/tasks/finalize-release.yml
+    params:
+      aws_access_key_id: {{cfcommunity-aws-access}}
+      aws_secret_access_key: {{cfcommunity-aws-secret}}
+  - put: boshrelease
+    params:
+      repository: final-release-repo
+      rebase: true
+  - task: create-release-notes
+    file: boshrelease-ci/ci/tasks/create-release-notes.yml
+  - put: version
+    params: {file: version/number}
+  - task: generate-commitish
+    config:
+      platform: linux
+      image: docker:///dingotiles/dingo-postgresql-release-pipeline
+      inputs: [{name: boshrelease}]
+      outputs: [{name: generated-commitish}]
+      run:
+        path: sh
+        args:
+        - -c
+        - |
+          git -C boshrelease rev-parse HEAD > generated-commitish/commitish
+  - put: github-release
+    params:
+      name: release-notes/release-name
+      tag: release-notes/release-name
+      body: release-notes/notes.md
+      commitish: generated-commitish/commitish
+      globs:
+      - final-release-tarball/*.tgz
+
+
 resources:
 - name: boshrelease
   type: git
@@ -98,6 +142,13 @@ resources:
     uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
+
+- name: github-release
+  type: github-release
+  source:
+    access_token: {{github-release-access-token}}
+    user: dingotiles
+    repository: dingo-postgresql-image-boshrelease
 
 - name: dingo-postgresql95
   type: docker-image
@@ -151,3 +202,9 @@ resources:
 - name: lite-errand-testflight
   type: bosh-errand
   source: *lite-testflight-defaults
+
+resource_types:
+- name: bosh-errand
+  type: docker-image
+  source:
+    repository: starkandwayne/bosh-errand-resource
