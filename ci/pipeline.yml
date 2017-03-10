@@ -46,6 +46,7 @@ jobs:
     - {get: candidate-release, passed: [bosh-rc], trigger: true}
     - {get: dingo-postgresql-release}
     - {get: version, passed: [bosh-rc]}
+    - {get: dingo-postgresql-release-manifests}
   - task: create-lite-manifest
     file: boshrelease-ci/ci/tasks/create-manifest.yml
     params:
@@ -88,6 +89,13 @@ resources:
     user: dingotiles
     repository: dingo-postgresql-release
     access_token: {{github-release-access-token}}
+
+- name: dingo-postgresql-release-manifests
+  type: git
+  source:
+    uri: git@github.com:dingotiles/dingo-postgresql-release.git
+    branch: {{pipeline-branch}}
+    private_key: {{github-private-key}}
 
 - name: version
   type: semver

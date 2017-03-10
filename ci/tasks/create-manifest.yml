@@ -8,6 +8,7 @@ inputs:
 - name: boshrelease-ci
 - name: dingo-postgresql-release
 - name: candidate-release
+- name: dingo-postgresql-release-manifests
 
 outputs:
 - name: manifest
@@ -19,7 +20,6 @@ params:
   bosh_syslog_host:
   bosh_syslog_port:
   deployment_name:
-  docker_image_source: embedded
   docker_image_image: "dingotiles/dingo-postgresql95"
   docker_image_tag: "9.5"
   aws_access_key:
