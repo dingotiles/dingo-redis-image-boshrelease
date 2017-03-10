@@ -45,7 +45,7 @@ for boshrelease in "${boshreleases[@]}"; do
     echo "$file did not contain version"
     exit 1
   fi
-  cat >>tile/tmp/metadata/other-releases.yml <<YAML
+  cat >>tmp/release.yml <<YAML
   - name: ${boshrelease}
     file: ${boshrelease}-${release_version}.tgz
     version: "${release_version}"
