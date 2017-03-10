@@ -36,7 +36,7 @@ YAML
 # versions available via inputs
 boshreleases=("dingo-postgresql" "etcd" "simple-remote-syslog")
 for boshrelease in "${boshreleases[@]}"; do
-  regexp="\/${boshrelease}-(.*)\.tgz"
+  regexp="dingo-postgresql-release\/${boshrelease}-(.*)\.tgz"
   file=$(ls $base_dir/dingo-postgresql-release/${boshrelease}*.tgz)
   if [[ $file =~ $regexp ]]; then
     release_version="${BASH_REMATCH[1]}"
