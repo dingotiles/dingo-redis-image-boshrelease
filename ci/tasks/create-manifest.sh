@@ -44,7 +44,7 @@ for boshrelease in "${boshreleases[@]}"; do
   cat >>tmp/release.yml <<YAML
   - name: "${boshrelease}"
     version: "${release_version}"
-    file: file://"${file}"
+    file: file://${file}
 YAML
 done
 

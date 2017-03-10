@@ -63,7 +63,7 @@ jobs:
     file: boshrelease-ci/ci/tasks/delete-testflight.yml
     params:
       deployment_name: dingo-postgresql-testflight
-      bosh_target: {{bosh-lite-integration-target}}
+      bosh_target: {{bosh-lite-testflight-target}}
       bosh_username: {{bosh-lite-username}}
       bosh_password: {{bosh-lite-password}}
   - put: lite-deployment-testflight
