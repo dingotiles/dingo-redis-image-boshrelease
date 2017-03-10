@@ -25,13 +25,9 @@ mkdir -p tmp
 cat >tmp/release.yml <<YAML
 ---
 releases:
-- name: ${release_name}
-  version: ${candidate_release_version}
-  file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
-YAML
-cat >tmp/other-releases.yml <<YAML
----
-releases:
+  - name: ${release_name}
+    version: ${candidate_release_version}
+    file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
 YAML
 
 # versions available via inputs
@@ -46,9 +42,9 @@ for boshrelease in "${boshreleases[@]}"; do
     exit 1
   fi
   cat >>tmp/release.yml <<YAML
-  - name: ${boshrelease}
-    file: ${boshrelease}-${release_version}.tgz
+  - name: "${boshrelease}"
     version: "${release_version}"
+    file: "${file}"
 YAML
 done
 
@@ -114,7 +110,7 @@ export DEPLOYMENT_NAME=${deployment_name}
   ${services_template} \
   templates/jobs-etcd.yml templates/integration-test.yml templates/cf.yml \
   tmp/syslog.yml tmp/docker_image.yml tmp/backups.yml \
-  tmp/release.yml tmp/other-releases.yml tmp/cf.yml
+  tmp/release.yml tmp/cf.yml
 
 cp tmp/${DEPLOYMENT_NAME}*.yml ${manifest_dir}/manifest.yml
 
