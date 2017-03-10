@@ -91,7 +91,8 @@ services_template=templates/services-cluster-backup-s3.yml
 bosh target ${bosh_target}
 
 export DEPLOYMENT_NAME=${deployment_name}
-./templates/make_manifest warden ${services_template} \
+./templates/make_manifest warden embedded \
+  ${services_template} \
   templates/jobs-etcd.yml templates/integration-test.yml templates/cf.yml \
   tmp/syslog.yml tmp/docker_image.yml tmp/backups.yml \
   tmp/release.yml tmp/other-releases.yml tmp/cf.yml
