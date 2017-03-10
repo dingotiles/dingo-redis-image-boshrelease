@@ -59,6 +59,13 @@ jobs:
       backups_bucket: {{backups-testflight-backups-bucket}}
       clusterdata_bucket: {{backups-testflight-clusterdata-bucket}}
       region: {{backups-testflight-s3-region}}
+  - task: delete-testflight
+    file: boshrelease-ci/ci/tasks/delete-testflight.yml
+    params:
+      deployment_name: dingo-postgresql-testflight
+      bosh_target: {{bosh-lite-integration-target}}
+      bosh_username: {{bosh-lite-username}}
+      bosh_password: {{bosh-lite-password}}
   - put: lite-deployment-testflight
     params:
       manifest: manifest/manifest.yml
