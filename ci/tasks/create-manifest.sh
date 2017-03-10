@@ -27,14 +27,14 @@ cat >tmp/release.yml <<YAML
 releases:
   - name: ${release_name}
     version: ${candidate_release_version}
-    file: $(ls -1 $base_dir/candidate-release/dingo-postgresql-image-*.tgz | head -n 1)
+    file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
 YAML
 
 # versions available via inputs
 boshreleases=("dingo-postgresql" "etcd" "simple-remote-syslog")
 for boshrelease in "${boshreleases[@]}"; do
   regexp="${boshrelease}-(.*)\.tgz"
-  file=$(ls $base_dir/dingo-postgresql-release/${boshrelease}*)
+  file=$(ls $base_dir/dingo-postgresql-release/${boshrelease}*.tgz)
   if [[ $file =~ $regexp ]]; then
     release_version="${BASH_REMATCH[1]}"
   else
