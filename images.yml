@@ -1,2 +1,4 @@
 - image: dingotiles/dingo-postgresql95
   tag: latest
+- image: cfcommunity/registrator
+  tag: latest
