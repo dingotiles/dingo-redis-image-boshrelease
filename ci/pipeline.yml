@@ -59,6 +59,26 @@ jobs:
       backups_bucket: {{backups-testflight-backups-bucket}}
       clusterdata_bucket: {{backups-testflight-clusterdata-bucket}}
       region: {{backups-testflight-s3-region}}
+  - put: lite-deployment-testflight
+    params:
+      manifest: manifest/manifest.yml
+      stemcells: [lite-stemcell/*.tgz]
+      releases:
+        - candidate-release/*.tgz
+        - etcd/*.tgz
+        - simple-remote-syslog/*.tgz
+  - put: sanity-test
+    resource: lite-errand-testflight
+    params:
+      manifest: manifest/manifest.yml
+      errand: sanity-test
+    on_failure:
+      task: show-broker-logs
+      file: boshrelease-ci/ci/tasks/show-broker-logs.yml
+      params:
+        bosh_target: {{bosh-lite-testflight-target}}
+        bosh_username: {{bosh-lite-username}}
+        bosh_password: {{bosh-lite-password}}
 
 resources:
 - name: boshrelease
@@ -115,3 +135,15 @@ resources:
     access_key_id: {{dingotiles-aws-access}}
     secret_access_key: {{dingotiles-aws-secret}}
     region_name: {{dingotiles-aws-region}}
+
+- name: lite-deployment-testflight
+  type: bosh-deployment
+  source: &lite-testflight-defaults
+    target: {{bosh-lite-testflight-target}}
+    username: {{bosh-lite-username}}
+    password: {{bosh-lite-password}}
+    deployment: dingo-postgresql-testflight
+
+- name: lite-errand-testflight
+  type: bosh-errand
+  source: *lite-testflight-defaults
