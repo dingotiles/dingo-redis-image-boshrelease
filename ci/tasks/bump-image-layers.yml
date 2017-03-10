@@ -7,9 +7,10 @@ image_resource:
 inputs:
 - name: boshrelease
 - name: boshrelease-ci
-- name: dingo-postgresql-release
-- name: dingo-postgresql95
+- name: docker-image-dingo-postgresql95
   path: images/dingotiles_dingo_postgresql95_latest_image
+- name: docker-image-registrator
+  path: images/cfcommunity_registrator_latest_image
 
 outputs:
 - name: boshrelease-images-updated

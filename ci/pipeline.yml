@@ -9,7 +9,8 @@ jobs:
   serial_groups: [boshrelease]
   plan:
   - aggregate:
-    - {get: dingo-postgresql95, trigger: true, params: {save: true}}
+    - {get: docker-image-dingo-postgresql95, trigger: true, params: {save: true}}
+    - {get: docker-image-registrator, params: {save: true}}
     - {get: boshrelease}
     - {get: boshrelease-ci}
   - task: bump-image-blob
@@ -150,13 +151,23 @@ resources:
     user: dingotiles
     repository: dingo-postgresql-image-boshrelease
 
-- name: dingo-postgresql95
+- name: docker-image-dingo-postgresql95
   type: docker-image
   source:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
     repository: dingotiles/dingo-postgresql95
+    tag: "latest"
+
+- name: docker-image-registrator
+  type: docker-image
+  source:
+    email: {{docker-hub-email}}
+    username: {{docker-hub-username}}
+    password: {{docker-hub-password}}
+    repository: cfcommunity/registrator
+    tag: "latest"
 
 - name: dingo-postgresql-release
   type: github-release
