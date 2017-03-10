@@ -21,6 +21,8 @@ EOF
 
 bosh target ${bosh_target}
 
+bosh upload release candidate-release/dingo-postgresql-image-*.tgz
+
 cd $base_dir/dingo-postgresql-release-manifests
 mkdir -p tmp
 
@@ -29,13 +31,12 @@ cat >tmp/release.yml <<YAML
 releases:
   - name: ${release_name}
     version: ${candidate_release_version}
-    file: file://$(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
 YAML
 
 # versions available via inputs
 boshreleases=("dingo-postgresql" "etcd" "simple-remote-syslog")
 for boshrelease in "${boshreleases[@]}"; do
-  regexp="${boshrelease}-(.*)\.tgz"
+  regexp="\/${boshrelease}-(.*)\.tgz"
   file=$(ls $base_dir/dingo-postgresql-release/${boshrelease}*.tgz)
   if [[ $file =~ $regexp ]]; then
     release_version="${BASH_REMATCH[1]}"
