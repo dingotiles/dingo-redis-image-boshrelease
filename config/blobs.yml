@@ -71,11 +71,43 @@ docker_layers/fab33e639ad59fc0388b94c537f0d9acffe22ddf6bb74df1e6a923138cb7965b.t
   object_id: 8b797f56-0866-4385-897e-8e0e6602c048
   sha: 6dd1a12683b1efb39f102d917016ce4b57abd629
   size: 71345
+docker_layers/024cd039c0bfd800f1a9b249e2bd06153151894bdb044573e9632fd88ea3a278.tgz:
+  object_id: fc6681fe-9c47-4f05-af9b-90791a11b42b
+  sha: 6cae0ba19bebb8c44a039e097029b696b12004f7
+  size: 53018341
+docker_layers/2b36c6d540b7cdd71b02662384bdf358ad9675482e92e82d14ebbadb242f8e26.tgz:
+  object_id: 2727713c-6c3a-42d8-9bb5-7165e6e38cdd
+  sha: f21477bfef791ea23cc5dc1034019f823f43e573
+  size: 494
+docker_layers/385ad574a2a86523db325dae53f3e064883b865c693de20edfbbb823668af12a.tgz:
+  object_id: fc1f89e4-29a7-4435-b543-b5572da8a95e
+  sha: a0db2e24e8ce02d478d1c6efc9f5fbf5cea8a9a5
+  size: 507
+docker_layers/697eb67cbf2adc07b39f4a63b074728b62e6b3cbd95b14a193003c84da081bb9.tgz:
+  object_id: 6229ce8b-400d-4c39-91b5-8a13e95603be
+  sha: d699dd994ba508a673bf3c67d6ed34620b119d4b
+  size: 2492423
+docker_layers/732c28d898b74d69d8a93766c96a7552a650f26dcdd847e500a912bcb9b985e2.tgz:
+  object_id: f6d71e2b-f185-4111-8ed3-5f6351136f88
+  sha: 5ec2e22b60c01036c9b865d452f483602e6c1e08
+  size: 42062420
+docker_layers/8f9d94b3358708673cda5e8b3a00eb8e58728314d2fad5fa58f38b1341c4ecaa.tgz:
+  object_id: f8997dac-acf5-44d5-a111-435caf74f03f
+  sha: 72c767a190ffb29cb462e9f0235d354558b0b3db
+  size: 20547
 docker_images/8587c66b6f0bab7113fc695ebc005e6fded05ccf23de72820e9e44f4da6bad68.json.tgz:
-  object_id: 237885fe-ef48-4bff-a5e1-2d0a70792a9a
-  sha: 3c063f876692c83b37d4bc445b9a1706ebd8ee7d
+  object_id: e9039b9b-5773-4f75-9d86-a45cfaa4952b
+  sha: 9ea45f2baa57c8d1ba046e4ebf1ae65b7274bc14
   size: 3185
 docker_images/dingotiles_dingo_postgresql95_latest_image.tgz:
-  object_id: 5c277d57-699e-4b38-a371-01b974f6aba3
-  sha: 2d7fae312ee370c811dd838fba7d15ac53e82c2f
+  object_id: bfd395b9-3e41-412d-9f3b-0f9ea7472c73
+  sha: 28cd11cb528771f11b5cccecc4297bc1de656ed4
   size: 970
+docker_images/0cccb789bfacb961b40fe03ef498d8beec081b832813de523af475c824789d0c.json.tgz:
+  object_id: 1d4ab6cf-05a4-450b-b22e-815c3f39be82
+  sha: 296d61b69b6b698bf1a43582f43b8d5f5ee0aa12
+  size: 1155
+docker_images/cfcommunity_registrator_latest_image.tgz:
+  object_id: c1f33620-e789-4dec-ac39-f9e172920d76
+  sha: 9a90e8bed86d3f8466a3e1d97fd86efc21d87d7d
+  size: 492
