@@ -22,7 +22,7 @@ params:
   enable_syslog: false
   deployment_name:
   docker_image_image: "dingotiles/dingo-postgresql95"
-  docker_image_tag: "9.5"
+  docker_image_tag: "latest"
   aws_access_key:
   aws_secret_key:
   region:
