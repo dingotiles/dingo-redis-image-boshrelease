@@ -27,7 +27,7 @@ cat >tmp/release.yml <<YAML
 releases:
   - name: ${release_name}
     version: ${candidate_release_version}
-    file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
+    file: file://$(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
 YAML
 
 # versions available via inputs
@@ -44,7 +44,7 @@ for boshrelease in "${boshreleases[@]}"; do
   cat >>tmp/release.yml <<YAML
   - name: "${boshrelease}"
     version: "${release_version}"
-    file: "${file}"
+    file: file://"${file}"
 YAML
 done
 

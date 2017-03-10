@@ -69,11 +69,8 @@ jobs:
   - put: lite-deployment-testflight
     params:
       manifest: manifest/manifest.yml
-      stemcells: [lite-stemcell/*.tgz]
-      releases:
-        - candidate-release/*.tgz
-        - etcd/*.tgz
-        - simple-remote-syslog/*.tgz
+      stemcells: []
+      releases: []
   - put: sanity-test
     resource: lite-errand-testflight
     params:
