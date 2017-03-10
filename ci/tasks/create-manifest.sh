@@ -41,10 +41,10 @@ for boshrelease in "${boshreleases[@]}"; do
     echo "$file did not contain version"
     exit 1
   fi
+  bosh upload release ${file}
   cat >>tmp/release.yml <<YAML
   - name: "${boshrelease}"
     version: "${release_version}"
-    file: file://${file}
 YAML
 done
 
