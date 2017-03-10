@@ -19,6 +19,7 @@ params:
   bosh_password: admin
   bosh_syslog_host:
   bosh_syslog_port:
+  enable_syslog: false
   deployment_name:
   docker_image_image: "dingotiles/dingo-postgresql95"
   docker_image_tag: "9.5"
@@ -27,7 +28,6 @@ params:
   region:
   backups_bucket:
   clusterdata_bucket:
-  enable_syslog:
 
 run:
   path: boshrelease-ci/ci/tasks/create-manifest.sh

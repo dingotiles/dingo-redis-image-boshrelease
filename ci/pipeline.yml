@@ -60,6 +60,9 @@ jobs:
       backups_bucket: {{backups-testflight-backups-bucket}}
       clusterdata_bucket: {{backups-testflight-clusterdata-bucket}}
       region: {{backups-testflight-s3-region}}
+      bosh_syslog_host: {{bosh-lite-syslog-host}}
+      bosh_syslog_port: {{bosh-lite-syslog-port}}
+      enable_syslog: true
   - task: delete-testflight
     file: boshrelease-ci/ci/tasks/delete-testflight.yml
     params:
