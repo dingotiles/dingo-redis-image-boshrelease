@@ -52,6 +52,25 @@ for boshrelease in "${boshreleases[@]}"; do
 YAML
 done
 
+if [[ "${enable_syslog}X" == "X" ]]; then
+  echo "--- {}" > tmp/syslog.yml
+else
+  cat > tmp/syslog.yml <<EOF
+properties:
+  remote_syslog:
+    address: ${bosh_syslog_host}
+    port: ${bosh_syslog_port}
+    short_hostname: true
+  docker:
+    log_driver: syslog
+    log_options:
+    - (( concat "syslog-address=udp://" properties.remote_syslog.address ":" properties.remote_syslog.port ))
+    - tag="{{.Name}}"
+  haproxy:
+    syslog: (( concat properties.remote_syslog.address ":" properties.remote_syslog.port ))
+EOF
+fi
+
 cat > tmp/docker_image.yml <<EOF
 meta:
   docker_image:
