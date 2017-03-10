@@ -27,7 +27,7 @@ cat >tmp/release.yml <<YAML
 releases:
   - name: ${release_name}
     version: ${candidate_release_version}
-    file: $(ls $base_dir/candidate-release/dingo-postgresql-image-*.tgz)
+    file: $(ls -1 $base_dir/candidate-release/dingo-postgresql-image-*.tgz | head -n 1)
 YAML
 
 # versions available via inputs
