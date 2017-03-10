@@ -19,6 +19,8 @@ auth:
     password: ${bosh_password}
 EOF
 
+bosh target ${bosh_target}
+
 cd $base_dir/dingo-postgresql-release-manifests
 mkdir -p tmp
 
@@ -102,8 +104,6 @@ cat tmp/cf.yml
 
 services_template=templates/services-cluster-backup-s3.yml
 # services_template=templates/services-cluster.yml
-
-bosh target ${bosh_target}
 
 export DEPLOYMENT_NAME=${deployment_name}
 ./templates/make_manifest warden embedded \
