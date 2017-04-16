@@ -14,9 +14,9 @@ cat > $NOTES/notes.md <<EOF
 
 \`\`\`yaml
 releases:
-- name: dingo-postgresql
-- name: dingo-postgresql-image
-  url: https://github.com/dingotiles/dingo-postgresql-image-release/releases/download/v${version}/dingo-postgresql-image-${version}.tgz
+- name: dingo-redis
+- name: dingo-redis-image
+  url: https://github.com/dingotiles/dingo-redis-image-release/releases/download/v${version}/dingo-redis-image-${version}.tgz
   sha1: ${image_sha1}
 \`\`\`
 EOF

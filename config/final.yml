@@ -2,5 +2,5 @@
 blobstore:
   provider: s3
   options:
-    bucket_name: dingo-postgresql-image-boshrelease
-final_name: dingo-postgresql-image
+    bucket_name: dingo-redis-image-boshrelease
+final_name: dingo-redis-image

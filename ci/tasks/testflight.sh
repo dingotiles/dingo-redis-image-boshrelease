@@ -22,7 +22,7 @@ EOF
 cd boshrelease
 bosh target ${bosh_target}
 
-bosh create release --name dingo-postgresql-image-boshrelease
+bosh create release --name dingo-redis-image-boshrelease
 bosh -n upload release --rebase
 
 # until otherwise need, assume we want to test with latest docker-boshrelease

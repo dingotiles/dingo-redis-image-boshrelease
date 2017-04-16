@@ -1,4 +1,2 @@
-- image: dingotiles/dingo-postgresql95
-  tag: latest
-- image: cfcommunity/registrator
-  tag: latest
+- image: frodenas/redis
+  tag: 3.2

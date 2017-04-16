@@ -2,7 +2,7 @@
 
 set -e
 
-release_name=${release_name:-"postgresql-docker"}
+release_name=${release_name:-"redis-docker"}
 
 cat > ~/.bosh_config << EOF
 ---

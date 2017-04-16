@@ -1,7 +1,7 @@
 ---
 groups:
 - name: images
-  jobs: [bump-layers, bosh-rc, testflight]
+  jobs: [bump-layers, bosh-rc]
 
 jobs:
 - name: bump-layers
@@ -9,8 +9,7 @@ jobs:
   serial_groups: [boshrelease]
   plan:
   - aggregate:
-    - {get: docker-image-dingo-postgresql95, trigger: true, params: {save: true}}
-    - {get: docker-image-registrator, params: {save: true}}
+    - {get: docker-image-frodenas-redis, trigger: true, params: {save: true}}
     - {get: boshrelease}
     - {get: boshrelease-ci}
   - task: bump-image-blob
@@ -35,115 +34,21 @@ jobs:
       aws_access_key_id: {{dingotiles-aws-access}}
       aws_secret_access_key: {{dingotiles-aws-secret}}
   - put: candidate-release
-    params: {file: candidate-release/dingo-postgresql-*.tgz}
-
-- name: testflight
-  public: true
-  serial: true
-  plan:
-  - aggregate:
-    - {get: boshrelease-ci}
-    - {get: boshrelease, passed: [bosh-rc]}
-    - {get: candidate-release, passed: [bosh-rc], trigger: true}
-    - {get: dingo-postgresql-release}
-    - {get: version, passed: [bosh-rc]}
-    - {get: dingo-postgresql-release-manifests}
-  - task: create-lite-manifest
-    file: boshrelease-ci/ci/tasks/create-manifest.yml
-    params:
-      deployment_name: dingo-postgresql-testflight
-      bosh_target: {{bosh-lite-testflight-target}}
-      bosh_username: {{bosh-lite-username}}
-      bosh_password: {{bosh-lite-password}}
-      aws_access_key: {{dingotiles-aws-access}}
-      aws_secret_key: {{dingotiles-aws-secret}}
-      backups_bucket: {{backups-testflight-backups-bucket}}
-      clusterdata_bucket: {{backups-testflight-clusterdata-bucket}}
-      region: {{backups-testflight-s3-region}}
-      bosh_syslog_host: {{bosh-lite-syslog-host}}
-      bosh_syslog_port: {{bosh-lite-syslog-port}}
-      enable_syslog: true
-  - task: delete-testflight
-    file: boshrelease-ci/ci/tasks/delete-testflight.yml
-    params:
-      deployment_name: dingo-postgresql-testflight
-      bosh_target: {{bosh-lite-testflight-target}}
-      bosh_username: {{bosh-lite-username}}
-      bosh_password: {{bosh-lite-password}}
-  - put: lite-deployment-testflight
-    params:
-      manifest: manifest/manifest.yml
-      stemcells: []
-      releases: []
-  - put: sanity-test
-    resource: lite-errand-testflight
-    params:
-      manifest: manifest/manifest.yml
-      errand: sanity-test
-    on_failure:
-      task: show-broker-logs
-      file: boshrelease-ci/ci/tasks/show-broker-logs.yml
-      params:
-        bosh_target: {{bosh-lite-testflight-target}}
-        bosh_username: {{bosh-lite-username}}
-        bosh_password: {{bosh-lite-password}}
-
-- name: shipit
-  serial_groups: [version]
-  public: true
-  plan:
-  - aggregate:
-    - {get: boshrelease-ci}
-    - {get: boshrelease, passed: [testflight]}
-    - {get: candidate-release, passed: [testflight]}
-    - {get: version, passed: [testflight], params: {bump: final}}
-  - task: create-final-release
-    file: boshrelease-ci/ci/tasks/finalize-release.yml
-    params:
-      aws_access_key_id: {{cfcommunity-aws-access}}
-      aws_secret_access_key: {{cfcommunity-aws-secret}}
-  - put: boshrelease
-    params:
-      repository: final-release-repo
-      rebase: true
-  - task: create-release-notes
-    file: boshrelease-ci/ci/tasks/create-release-notes.yml
-  - put: version
-    params: {file: version/number}
-  - task: generate-commitish
-    config:
-      platform: linux
-      image: docker:///dingotiles/dingo-postgresql-release-pipeline
-      inputs: [{name: boshrelease}]
-      outputs: [{name: generated-commitish}]
-      run:
-        path: sh
-        args:
-        - -c
-        - |
-          git -C boshrelease rev-parse HEAD > generated-commitish/commitish
-  - put: github-release
-    params:
-      name: release-notes/release-name
-      tag: release-notes/release-name
-      body: release-notes/notes.md
-      commitish: generated-commitish/commitish
-      globs:
-      - final-release-tarball/*.tgz
+    params: {file: candidate-release/dingo-redis-*.tgz}
 
 
 resources:
 - name: boshrelease
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    uri: git@github.com:dingotiles/dingo-redis-image-boshrelease.git
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
 
 - name: boshrelease-ci
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    uri: git@github.com:dingotiles/dingo-redis-image-boshrelease.git
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
 
@@ -152,15 +57,15 @@ resources:
   source:
     access_token: {{github-release-access-token}}
     user: dingotiles
-    repository: dingo-postgresql-image-boshrelease
+    repository: dingo-redis-image-boshrelease
 
-- name: docker-image-dingo-postgresql95
+- name: docker-image-dingo-redis95
   type: docker-image
   source:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
-    repository: dingotiles/dingo-postgresql95
+    repository: dingotiles/dingo-redis95
     tag: "latest"
 
 - name: docker-image-registrator
@@ -172,17 +77,17 @@ resources:
     repository: cfcommunity/registrator
     tag: "latest"
 
-- name: dingo-postgresql-release
+- name: dingo-redis-release
   type: github-release
   source:
     user: dingotiles
-    repository: dingo-postgresql-release
+    repository: dingo-redis-release
     access_token: {{github-release-access-token}}
 
-- name: dingo-postgresql-release-manifests
+- name: dingo-redis-release-manifests
   type: git
   source:
-    uri: git@github.com:dingotiles/dingo-postgresql-release.git
+    uri: git@github.com:dingotiles/dingo-redis-release.git
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
 
@@ -191,7 +96,7 @@ resources:
   source:
     driver: git
     initial_version: 0.10.2
-    uri: git@github.com:dingotiles/dingo-postgresql-image-boshrelease.git
+    uri: git@github.com:dingotiles/dingo-redis-image-boshrelease.git
     branch: version
     file: version
     private_key: {{github-private-key}}
@@ -199,8 +104,8 @@ resources:
 - name: candidate-release
   type: s3
   source:
-    bucket: dingo-postgresql-image-release-candidates
-    regexp: dingo-postgresql-image-(.*).tgz
+    bucket: dingo-redis-image-release-candidates
+    regexp: dingo-redis-image-(.*).tgz
     access_key_id: {{dingotiles-aws-access}}
     secret_access_key: {{dingotiles-aws-secret}}
     region_name: {{dingotiles-aws-region}}
@@ -211,7 +116,7 @@ resources:
     target: {{bosh-lite-testflight-target}}
     username: {{bosh-lite-username}}
     password: {{bosh-lite-password}}
-    deployment: dingo-postgresql-testflight
+    deployment: dingo-redis-testflight
 
 - name: lite-errand-testflight
   type: bosh-errand

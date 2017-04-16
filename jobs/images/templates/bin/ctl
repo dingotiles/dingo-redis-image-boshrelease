@@ -38,7 +38,7 @@ case $1 in
 
     ;;
   *)
-    echo "Usage: install_ctl {start|stop}"
+    echo "Usage: ctl {start|stop}"
 
     ;;
 

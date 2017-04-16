@@ -24,7 +24,7 @@ bosh target ${bosh_target}
 
 apt-get -yy install file # TODO missing from upstream
 
-bosh create release --name dingo-postgresql-image
+bosh create release --name dingo-redis-image
 bosh -n upload release --rebase
 
 # until otherwise need, assume we want to test with latest docker-boshrelease

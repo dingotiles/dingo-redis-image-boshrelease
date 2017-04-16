@@ -1,11 +1,10 @@
 ---
 name: images
 packages:
-- dingotiles_dingo_postgresql95_latest_image
-- cfcommunity_registrator_latest_image
+- frodenas_redis_latest_image
 templates:
   bin/monit_debugger: bin/monit_debugger
-  bin/install_ctl: bin/install_ctl
+  bin/ctl: bin/ctl
   helpers/ctl_setup.sh: helpers/ctl_setup.sh
   helpers/ctl_utils.sh: helpers/ctl_utils.sh
 properties: {}

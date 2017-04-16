@@ -2,15 +2,13 @@
 platform: linux
 image_resource:
   type: docker-image
-  source: {repository: dingotiles/dingo-postgresql-release-pipeline}
+  source: {repository: dingotiles/dingo-redis-release-pipeline}
 
 inputs:
 - name: boshrelease
 - name: boshrelease-ci
-- name: docker-image-dingo-postgresql95
-  path: images/dingotiles_dingo_postgresql95_latest_image
-- name: docker-image-registrator
-  path: images/cfcommunity_registrator_latest_image
+- name: docker-image-frodenas-redis
+  path: images/frodenas_redis_latest_image
 
 outputs:
 - name: boshrelease-images-updated
