@@ -1,7 +1,7 @@
 ---
 name: images
 packages:
-- frodenas_redis_latest_image
+- frodenas_redis_3_2_image
 templates:
   bin/monit_debugger: bin/monit_debugger
   bin/ctl: bin/ctl
