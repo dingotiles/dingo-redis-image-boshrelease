@@ -1,5 +1,5 @@
-check process images
-  with pidfile /var/vcap/sys/run/images/images.pid
-  start program "/var/vcap/jobs/images/bin/monit_debugger ctl '/var/vcap/jobs/images/bin/ctl start'"
-  stop program "/var/vcap/jobs/images/bin/monit_debugger ctl '/var/vcap/jobs/images/bin/ctl stop'"
+check process dingo-redis-image
+  with pidfile /var/vcap/sys/run/dingo-redis-image/dingo-redis-image.pid
+  start program "/var/vcap/jobs/dingo-redis-image/bin/monit_debugger ctl '/var/vcap/jobs/dingo-redis-image/bin/ctl start'"
+  stop program "/var/vcap/jobs/dingo-redis-image/bin/monit_debugger ctl '/var/vcap/jobs/dingo-redis-image/bin/ctl stop'"
   group vcap
