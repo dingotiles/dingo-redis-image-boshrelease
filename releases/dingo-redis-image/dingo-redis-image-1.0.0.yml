@@ -1,0 +1,19 @@
+name: dingo-redis-image
+version: 1.0.0
+commit_hash: 2f5f825
+uncommitted_changes: false
+jobs:
+- name: dingo-redis-image
+  version: cbc2e468a3c9e26e49ef345227ce788725a9e579
+  fingerprint: cbc2e468a3c9e26e49ef345227ce788725a9e579
+  sha1: bd6c991ab871eb518e54aea17fae931d1a5f9501
+packages:
+- name: frodenas_redis_3_2_image
+  version: 46ef307ca7327aca0f3ed13a1cdceca3c5bdf947
+  fingerprint: 46ef307ca7327aca0f3ed13a1cdceca3c5bdf947
+  sha1: 1425079dab6c34c9e4d90d95249f2d3ad3529efd
+  dependencies: []
+license:
+  version: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  fingerprint: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  sha1: e56c2ef4aba5007fd0d1cede2c0fc785fc20732e
