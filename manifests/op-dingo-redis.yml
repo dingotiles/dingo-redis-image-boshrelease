@@ -1,11 +1,5 @@
 ---
 - type: replace
-  path: /releases/-
-  value:
-    name: dingo-redis-image
-    version: latest
-
-- type: replace
   path: /instance_groups/name=docker/jobs/-
   value:
     name: dingo-redis-image
@@ -56,3 +50,10 @@
   value:
     name: docker-broker-redis32-secret
     type: password
+
+- type: replace
+  path: /releases/-
+  value:
+    name: dingo-redis-image
+    version: 1.0.0
+    sha1: 6b7b15c21a6b11e06cd835bd56c49c3ed18443dd
