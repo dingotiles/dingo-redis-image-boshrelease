@@ -6,5 +6,5 @@ This BOSH release embeds a Docker image and pre-installs them into VMs running d
 bosh2 deploy manifests/broker/docker-broker.yml \
   --vars-store tmp/creds.yml \
   -o manifests/broker/services/op-redis32.yml \
-  -o ../dingo-redis-image-boshrelease/manifests/op-redis-image.yml
+  -o ../dingo-redis-image-boshrelease/manifests/op-dingo-redis.yml
 ```
