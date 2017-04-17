@@ -1,5 +1,5 @@
 ---
-name: images
+name: dingo-redis-image
 packages:
 - frodenas_redis_3_2_image
 templates:
