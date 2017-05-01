@@ -1,7 +1,7 @@
 ---
 name: dingo-redis-image
 packages:
-- frodenas_redis_3_2_image
+- dingotiles_dingo_redis_image
 templates:
   bin/monit_debugger: bin/monit_debugger
   bin/ctl: bin/ctl
