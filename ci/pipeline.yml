@@ -8,7 +8,7 @@ jobs:
   public: true
   plan:
   - aggregate:
-    - {get: docker-image-starkandwayne-redis, trigger: true, params: {skip_download: true}}
+    - {get: docker-image-starkandwayne-redis, params: {skip_download: true}}
     - {get: boshrelease-ci}
     - {get: boshrelease}
     - {get: version, params: {pre: rc}}
