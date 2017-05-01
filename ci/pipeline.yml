@@ -1,41 +1,20 @@
 ---
 groups:
 - name: images
-  jobs: [bump-layers, bosh-rc]
+  jobs: [image]
 
 jobs:
-- name: bump-layers
+- name: image
   public: true
-  serial_groups: [boshrelease]
   plan:
   - aggregate:
-    - {get: docker-image-frodenas-redis, trigger: true, params: {save: true}}
+    - {get: docker-image-starkandwayne-redis, trigger: true}
+    - {get: boshrelease-ci}
     - {get: boshrelease}
-    - {get: boshrelease-ci}
-  - task: bump-image-blob
-    file: boshrelease-ci/ci/tasks/bump-image-layers.yml
+    - {get: version}
+  - put: docker-image-dingotiles-redis
     params:
-      aws_access_key_id: {{cfcommunity-aws-access}}
-      aws_secret_access_key: {{cfcommunity-aws-secret}}
-  - put: boshrelease
-    params: {repository: boshrelease-images-updated, rebase: true}
-
-- name: bosh-rc
-  public: true
-  plan:
-  - aggregate:
-    - {get: boshrelease-ci}
-    - {get: boshrelease, passed: [bump-layers], trigger: true}
-    # - {get: version, passed: [bump-layers], trigger: true}
-    - {put: version, params: {pre: rc}}
-  - task: create-candidate-release
-    file: boshrelease-ci/ci/tasks/create-candidate-release.yml
-    params:
-      aws_access_key_id: {{dingotiles-aws-access}}
-      aws_secret_access_key: {{dingotiles-aws-secret}}
-  - put: candidate-release
-    params: {file: candidate-release/dingo-redis-*.tgz}
-
+      dockerfile: boshrelease-ci/image
 
 resources:
 - name: boshrelease
@@ -52,78 +31,30 @@ resources:
     branch: {{pipeline-branch}}
     private_key: {{github-private-key}}
 
-- name: github-release
-  type: github-release
-  source:
-    access_token: {{github-release-access-token}}
-    user: dingotiles
-    repository: dingo-redis-image-boshrelease
-
-- name: docker-image-dingo-redis95
+- name: docker-image-starkandwayne-redis
   type: docker-image
   source:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
-    repository: dingotiles/dingo-redis95
+    repository: starkandwayne/redis
     tag: "latest"
 
-- name: docker-image-registrator
+- name: docker-image-dingotiles-redis
   type: docker-image
   source:
     email: {{docker-hub-email}}
     username: {{docker-hub-username}}
     password: {{docker-hub-password}}
-    repository: cfcommunity/registrator
-    tag: "latest"
-
-- name: dingo-redis-release
-  type: github-release
-  source:
-    user: dingotiles
-    repository: dingo-redis-release
-    access_token: {{github-release-access-token}}
-
-- name: dingo-redis-release-manifests
-  type: git
-  source:
-    uri: git@github.com:dingotiles/dingo-redis-release.git
-    branch: {{pipeline-branch}}
-    private_key: {{github-private-key}}
+    repository: dingotiles/dingo-redis
+    tag: "edge"
 
 - name: version
   type: semver
   source:
     driver: git
-    initial_version: 0.10.2
+    initial_version: 0.5.0
     uri: git@github.com:dingotiles/dingo-redis-image-boshrelease.git
     branch: version
     file: version
     private_key: {{github-private-key}}
-
-- name: candidate-release
-  type: s3
-  source:
-    bucket: dingo-redis-image-release-candidates
-    regexp: dingo-redis-image-(.*).tgz
-    access_key_id: {{dingotiles-aws-access}}
-    secret_access_key: {{dingotiles-aws-secret}}
-    region_name: {{dingotiles-aws-region}}
-
-- name: lite-deployment-testflight
-  type: bosh-deployment
-  source: &lite-testflight-defaults
-    target: {{bosh-lite-testflight-target}}
-    username: {{bosh-lite-username}}
-    password: {{bosh-lite-password}}
-    deployment: dingo-redis-testflight
-
-- name: lite-errand-testflight
-  type: bosh-errand
-  source: *lite-testflight-defaults
-
-resource_types:
-- name: bosh-errand
-  type: docker-image
-  source:
-    repository: starkandwayne/bosh-errand-resource
