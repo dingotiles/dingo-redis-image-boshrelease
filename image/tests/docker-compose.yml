@@ -11,7 +11,9 @@ services:
       REDIS_BOOTSTRAP_FROM_BACKUP: "true"
       REDIS_SHIELD_ENDPOINT: https://shield
       REDIS_BACKUPS_SCHEDULE: daily
+      REDIS_BACKUPS_SCHEDULE_VALUE: "4am daily"
       REDIS_BACKUPS_RETENTION: shortterm
+      REDIS_BACKUPS_RETENTION_VALUE: "864000"
       REDIS_BACKUPS_STORE: default
     links:
     - shield
