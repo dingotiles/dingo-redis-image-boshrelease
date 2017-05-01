@@ -32,6 +32,7 @@ services:
         access_key_id='${AWS_ACCESS_KEY}'
         secret_access_key='${AWS_SECRET_KEY}'
         bucket='${AWS_BUCKET}'
+        region='${AWS_REGION}'
         prefix='redis-delmo'
         [schedules]
         daily='daily 4am'
