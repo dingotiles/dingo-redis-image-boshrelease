@@ -1,0 +1,56 @@
+version: '2'
+
+services:
+  redis:
+    image: dingotiles/docker-redis:latest
+    command: "/scripts/entry.sh start starkandwayne/redis --peer shield"
+    environment:
+      REDIS_PASSWORD: secretpassword
+      REDIS_BOOTSTRAP_FROM_BACKUP: true
+      REDIS_SHIELD_ENDPOINT: https://shield
+      REDIS_BACKUPS_SCHEDULE: daily
+      REDIS_BACKUPS_RETENTION: shortterm
+      REDIS_BACKUPS_STORE: default
+    links:
+    - shield
+  shield:
+    image: starkandwayne/shield:edge
+    ports:
+    - 443:443
+    command: "start starkandwayne/shield --peer database --bind database:postgresql.shield"
+    links:
+    - database
+  agent: # to autoprovision the dependant store
+    image: starkandwayne/shield-agent:edge
+    command: "start starkandwayne/shield-agent --bind daemon:shield.default --peer shield"
+    environment:
+      HAB_SHIELD_AGENT: |
+        [[stores]]
+        name='default'
+        plugin='s3'
+        [stores.config]
+        access_key_id='${AWS_ACCESS_KEY}'
+        secret_access_key='${AWS_SECRET_KEY}'
+        bucket='${AWS_BUCKET}'
+        prefix='redis-delmo'
+        [schedules]
+        daily='daily 4am'
+        [retention-policies]
+        shortterm='86400'
+    links:
+    - shield
+  database:
+    image: starkandwayne/postgresql:edge
+    command: "start starkandwayne/postgresql --group shield"
+  tests:
+    image: starkandwayne-redis-tests
+    build: ./
+    environment:
+      REDIS_PASSWORD: secretpassword
+      REDIS_HOST: redis
+      SHIELD_ENDPOINT: https://shield
+      SHIELD_API_TOKEN: autoprovision
+      SHIELD_SKIP_SSL_VERIFY: 'true'
+    links:
+    - redis
+    - shield
