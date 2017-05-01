@@ -2,7 +2,7 @@ version: '2'
 
 services:
   redis:
-    image: dingotiles/docker-redis:latest
+    image: dingotiles/dingo-redis:latest
     command: "/scripts/entry.sh start starkandwayne/redis --peer shield"
     environment:
       REDIS_PASSWORD: secretpassword
