@@ -42,8 +42,8 @@
       description: Redis node
       container:
         backend: 'docker'
-        image: 'frodenas/redis'
-        tag: '3.2'
+        image: 'dingotiles/dingo-redis'
+        tag: 'latest'
         persistent_volumes: [/data]
       credentials:
         password: {key: 'REDIS_PASSWORD'}
