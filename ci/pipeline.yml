@@ -1,7 +1,7 @@
 ---
 groups:
 - name: images
-  jobs: [image]
+  jobs: [image, delmo]
 
 jobs:
 - name: image
@@ -15,6 +15,13 @@ jobs:
   - put: docker-image-dingotiles-redis
     params:
       build: boshrelease-ci/image
+
+- name: delmo
+  public: true
+  plan:
+  - aggregate:
+    - {get: boshrelease, passed: [image]}
+    - {get: version, passed: [image], trigger: true}
 
 resources:
 - name: boshrelease
