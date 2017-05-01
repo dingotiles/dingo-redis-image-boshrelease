@@ -3,7 +3,9 @@ version: '2'
 services:
   redis:
     image: dingotiles/dingo-redis:edge
-    command: "/scripts/entry.sh start starkandwayne/redis --peer shield"
+    command: "--peer shield"
+    ports:
+    - 6379:6379
     environment:
       REDIS_PASSWORD: secretpassword
       REDIS_BOOTSTRAP_FROM_BACKUP: "true"
