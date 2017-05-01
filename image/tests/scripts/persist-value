@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -e
+
+key=${1}
+value=${2}
+
+redis-cli -h ${REDIS_HOST} -a ${REDIS_PASSWORD} SET ${key} ${value}
+
+if [[ $(redis-cli -h ${REDIS_HOST} -a ${REDIS_PASSWORD} GET ${key}) != "${value}" ]]; then
+  exit 1
+fi
