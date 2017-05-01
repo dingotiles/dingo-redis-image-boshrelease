@@ -1,5 +1,7 @@
 # Dingo Redis image
 
+This is the Docker image used in Dingo Redis tile for Pivotal Ops Manager and BOSH deployments. The primary contents are from https://github.com/starkandwayne/habitat-plans/tree/master/redis using https://habitat.sh, with an additional [`entry.sh`](https://github.com/dingotiles/dingo-redis-image-boshrelease/blob/master/image/scripts/entry.sh) to convert simple environment variables into Habitat configuration.
+
 To build:
 
 ```
