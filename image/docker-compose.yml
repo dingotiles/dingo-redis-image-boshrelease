@@ -6,7 +6,7 @@ services:
     command: "/scripts/entry.sh start starkandwayne/redis --peer shield"
     environment:
       REDIS_PASSWORD: secretpassword
-      REDIS_BOOTSTRAP_FROM_BACKUP: true
+      REDIS_BOOTSTRAP_FROM_BACKUP: "true"
       REDIS_SHIELD_ENDPOINT: https://shield
       REDIS_BACKUPS_SCHEDULE: daily
       REDIS_BACKUPS_RETENTION: shortterm
