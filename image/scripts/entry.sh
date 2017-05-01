@@ -4,12 +4,12 @@
 # to be converted to habitat configuration
 #
 # Example usage:
-# 
-#   docker run -e REDIS_PASSWORD=foobar REDIS_PORT=1234 dingotiles/redis32
+#
+#   docker run -e REDIS_PASSWORD=foobar REDIS_PORT=1234 dingotiles/dingo-redis
 #
 # is the equivalent of normal habitat/docker usage:
 #
-#   docker run -e HAB_REDIS='password=foobar port=1234' dingotiles/redis32
+#   docker run -e HAB_REDIS='password=foobar port=1234' dingotiles/dingo-redis
 
 set -e
 
