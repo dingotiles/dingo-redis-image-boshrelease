@@ -13,7 +13,6 @@ services:
       REDIS_BACKUPS_SCHEDULE: daily
       REDIS_BACKUPS_SCHEDULE_VALUE: "4am daily"
       REDIS_BACKUPS_RETENTION: shortterm
-      REDIS_BACKUPS_RETENTION_VALUE: "864000"
       REDIS_BACKUPS_STORE: default
     links:
     - shield
