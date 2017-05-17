@@ -2,18 +2,23 @@
 
 This BOSH release embeds a Docker image and pre-installs them into VMs running docker daemon. This allows Dingo Redis to be installed into data centers that do not have Internet network connectivity, and means that no Docker Registry is required for Dingo Redis.
 
-From the docker-boshrelease project:
+Preparation:
 
 ```
-bosh2 -d docker-broker deploy manifests/broker/docker-broker.yml \
-  --vars-store tmp/creds.yml \
-  -o ../dingo-redis-image-boshrelease/manifests/op-dingo-redis.yml
+git submodule update --init
+export BOSH_ENVIRONMENT=<url/alias>
+export BOSH_DEPLOYMENT=dingo-redis
 ```
 
-From the docker-broker-deployment project:
+```
+bosh2 deploy manifests/docker-broker.yml \
+  -o manifests/operators/dingo-redis.yml
+```
+
+If your BOSH does not have Credhub/Config Server (if `bosh2 env` includes `config_server: disabled`), then include `--vars-store` to generate/store internal credentials/passwords:
 
 ```
-bosh2 -d docker-broker deploy docker-broker.yml \
-  --vars-store tmp/creds.yml \
-  -o ../dingo-redis-image-boshrelease/manifests/op-dingo-redis.yml
+bosh2 deploy manifests/docker-broker.yml \
+  -o manifests/operators/dingo-redis.yml \
+  --vars-store tmp/creds.yml
 ```

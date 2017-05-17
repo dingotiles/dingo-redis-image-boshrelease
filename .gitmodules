@@ -1,0 +1,3 @@
+[submodule "manifests/docker-broker-deployment"]
+	path = manifests/docker-broker-deployment
+	url = https://github.com/cloudfoundry-community/docker-broker-deployment

@@ -1,5 +1,9 @@
 ---
 - type: replace
+  path: /name
+  value: dingo-redis
+
+- type: replace
   path: /instance_groups/name=docker/jobs/-
   value:
     name: dingo-redis-image

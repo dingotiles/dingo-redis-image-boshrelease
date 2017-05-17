@@ -1,0 +1,6 @@
+---
+- type: replace
+  path: /releases/name=dingo-redis-image
+  value:
+    name: dingo-redis-image
+    version: latest
