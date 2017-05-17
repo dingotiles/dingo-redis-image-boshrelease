@@ -25,3 +25,30 @@ OK
 $ docker exec redis redis-cli -a secret GET hello
 world
 ```
+
+### Use image to test Redis
+
+This image includes `sanity-test` command that can interact with a Redis service (for example, another running container of this image).
+
+```
+$ docker run --entrypoint '' \
+  -e credentials='{"hostname":"10.0.0.0","port":40000,"password":"qwerty"}' \
+  dingotiles/dingo-redis sanity-test
+```
+
+You can also easily use `sanity-test` command to self-test a running container:
+
+```
+docker run -d --name redis -p 6379:6379 dingotiles/dingo-redis && \
+  docker exec -ti redis sanity-test
+```
+
+The output will look similar to:
+
+```
+No $credentials provided, entering self-test mode.
+Sanity testing Redis with {"hosthame":"localhost","host":"localhost","port":6379,"password":"EHaDbp6TyVaF7rsI"}
+set sanity-test 1
+OK
+get sanity-test = 1
+```

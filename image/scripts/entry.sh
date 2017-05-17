@@ -24,4 +24,8 @@ env | \
 
 eval "export HAB_${service}='$(cat /env.toml)'"
 
+mkdir -p /config
+echo "{\"hosthame\":\"localhost\",\"host\":\"localhost\",\"port\":6379,\"password\":\"$REDIS_PASSWORD\"}" > /config/credentials.json
+echo /config/credentials.json
+
 exec /init.sh "$@"
