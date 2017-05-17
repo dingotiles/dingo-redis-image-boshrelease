@@ -39,7 +39,7 @@ $ docker run --entrypoint '' \
 You can also easily use `sanity-test` command to self-test a running container:
 
 ```
-docker run -d --name redis -p 6379:6379 dingotiles/dingo-redis && \
+docker run -d --name redis -p 6379:6379 -e REDIS_PASSWORD=somesecret dingotiles/dingo-redis && \
   docker exec -ti redis sanity-test
 ```
 
