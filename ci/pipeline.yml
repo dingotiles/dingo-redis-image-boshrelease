@@ -67,20 +67,16 @@ jobs:
     - aggregate:
       - {get: docker-image-starkandwayne-redis, params: {skip_download: true}}
       - {get: git}
-      - {get: version, params: {pre: rc}}
     - put: docker-image-dingotiles-redis
       params:
         build: git/image
-    - put: version
-      params: {file: version/number}
 
   - name: delmo
     public: true
     plan:
     - aggregate:
       - {get: git, passed: [image]}
-      - {get: version, passed: [image], trigger: true}
-      - {get: docker-image-dingotiles-redis, passed: [image]}
+      - {get: docker-image-dingotiles-redis, passed: [image], trigger: true}
     - task: run-delmo-test
       file: git/ci/scripts/run-delmo-test.yml
       params:
@@ -257,13 +253,13 @@ resources:
 
   - name: version
     type: semver
-    source :
-      driver:            s3
-      bucket:            (( grab meta.aws.bucket ))
-      key:               version
-      access_key_id:     (( grab meta.aws.access_key ))
-      secret_access_key: (( grab meta.aws.secret_key ))
-      initial_version:   (( grab meta.initial_version || "0.0.1" ))
+    source:
+      driver:          git
+      initial_version: 0.6.0
+      uri:             (( grab meta.github.uri ))
+      branch:          version
+      file:            version
+      private_key:     (( grab meta.github.private_key ))
 
   - name: docker-image-starkandwayne-redis
     type: docker-image
