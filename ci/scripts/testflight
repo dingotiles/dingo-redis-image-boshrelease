@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# ci/scripts/create-release-and-deploy
+#
+# Script for generating Github release / tag assets
+# and managing release notes for a BOSH Release pipeline
+#
+# author:  James Hunt <james@niftylogic.com>
+# created: 2016-03-30
+
+header() {
+	echo
+	echo "###############################################"
+	echo
+	echo $*
+	echo
+}
+
+header "Setting up bosh2 config..."
+export BOSH_ENVIRONMENT=${BOSH_ENVIRONMENT:?required}
+export BOSH_CA_CERT=${BOSH_CA_CERT:?required}
+export BOSH_CLIENT=${BOSH_CLIENT:?required}
+export BOSH_CLIENT_SECRET=${BOSH_CLIENT_SECRET:?required}
+export BOSH_DEPLOYMENT=${BOSH_DEPLOYMENT:?required}
+
+set -e
+cd ${REPO_ROOT}
+header "Pulling in any git submodules..."
+git submodule update --init --recursive --force
+
+header "Cleaning up from any previous deployments..."
+bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
+
+apt-get update && apt-get install maven -y
+header "Creating candidate BOSH release..."
+bosh2 -n create-release
+bosh2 -n upload-release --rebase || echo "Continuing..."
+
+header "Deploying to ${BOSH_LITE_TARGET}..."
+mkdir -p tmp
+cat > tmp/name.yml <<YAML
+---
+- type: replace
+  path: /name
+  value: ${BOSH_DEPLOYMENT:?required}
+YAML
+
+bosh2 -n deploy manifests/docker-broker.yml \
+  -o manifests/operators/dingo-redis.yml \
+	--vars-store tmp/creds.yml \
+	-o manifests/operators/dev.yml \
+	-o tmp/name.yml
+
+if [[ -n ${TEST_ERRANDS} ]]; then
+	for errand in ${TEST_ERRANDS}; do
+		header "Running '${errand}' errand"
+		bosh2 -n run-errand ${errand}
+	done
+fi
+
+header "Cleaning up..."
+bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
+bosh2 -n cleanup || echo "continuing on..."
+
+echo
+echo "SUCCESS"
+exit 0
