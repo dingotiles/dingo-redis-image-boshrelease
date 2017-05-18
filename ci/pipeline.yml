@@ -67,7 +67,7 @@ jobs:
     - aggregate:
       - {get: docker-image-starkandwayne-redis, params: {skip_download: true}}
       - {get: git}
-    - put: docker-image-dingotiles-redis
+    - put: docker-image-dingotiles-redis-edge
       params:
         build: git/image
 
@@ -76,7 +76,7 @@ jobs:
     plan:
     - aggregate:
       - {get: git, passed: [image]}
-      - {get: docker-image-dingotiles-redis, passed: [image], trigger: true}
+      - {get: docker-image-dingotiles-redis-edge, passed: [image], trigger: true}
     - task: run-delmo-test
       config:
         platform: linux
@@ -283,14 +283,14 @@ resources:
       repository: starkandwayne/redis
       tag: "latest"
 
-  - name: docker-image-dingotiles-redis
+  - name: docker-image-dingotiles-redis-edge
     type: docker-image
     source:
       email: (( grab meta.docker_hub.email ))
       username: (( grab meta.docker_hub.username ))
       password: (( grab meta.docker_hub.password ))
       repository: dingotiles/dingo-redis
-      tag: "latest"
+      tag: "edge"
 
   - name: notify
     type: slack-notification
