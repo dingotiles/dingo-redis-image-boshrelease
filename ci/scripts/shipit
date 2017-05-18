@@ -50,6 +50,12 @@ export BOSH_CLIENT=${BOSH_CLIENT:?required}
 export BOSH_CLIENT_SECRET=${BOSH_CLIENT_SECRET:?required}
 
 
+header "Importing image into release..."
+cp image/image-id     ${REPO_ROOT}/src/image-cache/
+cp image/repository   ${REPO_ROOT}/src/image-cache/
+cp image/tag          ${REPO_ROOT}/src/image-cache/
+gzip -c image/image > ${REPO_ROOT}/src/image-cache/image.tgz
+
 (
 cd ${REPO_ROOT}
 RELEASE_NAME=$(bosh2 int config/final.yml --path /final_name)
@@ -67,7 +73,6 @@ header "Pulling in any git submodules..."
 git submodule update --init --recursive --force
 
 header "Create final release..."
-apt-get update && apt-get install maven -y
 bosh2 -n create-release --final --version "${VERSION}"
 bosh2 -n create-release releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.yml \
               --tarball releases/$RELEASE_NAME/$RELEASE_NAME-$VERSION.tgz
@@ -106,7 +111,7 @@ if [[ -z $(git config --global user.name) ]]; then
 fi
 
 (cd ${REPO_ROOT}
- # $DIR/update-manifest $GITHUB_OWNER $RELEASE_NAME $VERSION $SHA1
+ $DIR/update-manifest $GITHUB_OWNER $RELEASE_NAME $VERSION $SHA1
  git merge --no-edit ${BRANCH}
  git add -A
  git status
