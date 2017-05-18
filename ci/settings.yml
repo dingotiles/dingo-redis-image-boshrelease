@@ -24,6 +24,21 @@ meta:
       username: (( vault "secret/bosh-lites/lite49" "/cf:admin_username" ))
       password: (( vault "secret/bosh-lites/lite49" "/cf:admin_password" ))
       skip_ssl_validation: (( vault "secret/bosh-lites/lite49" "/cf:skip_ssl_validation" ))
+  docker_hub:
+    email: (( vault "secret/pipelines/" meta.github.repo "/docker_hub:email" ))
+    username: (( vault "secret/pipelines/" meta.github.repo "/docker_hub:username" ))
+    password: (( vault "secret/pipelines/" meta.github.repo "/docker_hub:password" ))
+  docker-machine:
+    access_key: (( vault "secret/pipelines/" meta.github.repo "/docker_machine:access_key"))
+    secret_key: (( vault "secret/pipelines/" meta.github.repo "/docker_machine:secret_key"))
+    region: (( vault "secret/pipelines/" meta.github.repo "/docker_machine:region"))
+    bucket: (( vault "secret/pipelines/" meta.github.repo "/docker_machine:bucket"))
+    machine_name: delmo-dingo-postgresql-pipeline
+  delmo:
+    access_key: (( vault "secret/pipelines/" meta.github.repo "/delmo:access_key"))
+    secret_key: (( vault "secret/pipelines/" meta.github.repo "/delmo:secret_key"))
+    region: (( vault "secret/pipelines/" meta.github.repo "/delmo:region"))
+    bucket: (( vault "secret/pipelines/" meta.github.repo "/delmo:bucket"))
   slack:
     channel: Please specify the channel (#name) or user (@user) to send messages to
     webhook: Please specify your Slack Incoming Webhook Integration URL
