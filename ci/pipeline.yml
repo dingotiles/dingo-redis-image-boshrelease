@@ -209,7 +209,7 @@ jobs:
           params:
             REPO_ROOT:    git
             VERSION_FROM: version/number
-            RELEASE_NAME: (( concat meta.release ))
+            RELEASE_NAME: (( grab meta.release ))
             RELEASE_ROOT: gh
             REPO_OUT:     pushme
             BRANCH:       (( grab meta.github.branch ))
