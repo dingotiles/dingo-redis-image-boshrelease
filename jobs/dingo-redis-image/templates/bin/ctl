@@ -17,14 +17,14 @@ case $1 in
     # store pid in $PIDFILE
     echo $$ > $PIDFILE
 
-    docker_host=unix:///var/vcap/sys/run/docker/docker.sock
+    export DOCKER_SOCK=/var/vcap/sys/run/docker/docker.sock
+    export DOCKER_HOST=unix://${DOCKER_SOCK}
 
     set -x # print commands
     for image_dir in /var/vcap/packages/*_image; do
       image=$image_dir/image.tgz
       echo "Loading docker image $image" >>$LOG_DIR/$JOB_NAME.stdout.log
-      docker --host $docker_host \
-           load -i $image \
+      docker load -i $image \
              >>$LOG_DIR/$JOB_NAME.stdout.log \
              2>>$LOG_DIR/$JOB_NAME.stderr.log
 
