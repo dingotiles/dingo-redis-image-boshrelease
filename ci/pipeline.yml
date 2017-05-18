@@ -78,16 +78,29 @@ jobs:
       - {get: git, passed: [image]}
       - {get: docker-image-dingotiles-redis, passed: [image], trigger: true}
     - task: run-delmo-test
-      file: git/ci/scripts/run-delmo-test.yml
-      params:
-        MACHINE_EXPORT_AWS_ACCESS_KEY_ID:     (( grab meta.docker-machine.access_key ))
-        MACHINE_EXPORT_AWS_SECRET_ACCESS_KEY: (( grab meta.docker-machine.secret_key ))
-        MACHINE_EXPORT_AWS_REGION:            (( grab meta.docker-machine.region ))
-        MACHINE_EXPORT_AWS_BUCKET:            (( grab meta.docker-machine.bucket ))
-        AWS_ACCESS_KEY: (( grab meta.delmo.access_key ))
-        AWS_SECRET_KEY: (( grab meta.delmo.secret_key ))
-        AWS_REGION:     (( grab meta.delmo.region ))
-        AWS_BUCKET:     (( grab meta.delmo.bucket ))
+      config:
+        platform: linux
+        image_resource:
+          type: docker-image
+          source: { repository: dingotiles/delmo-concourse }
+
+        inputs:
+        - name: git
+
+        params:
+          MACHINE_NAME: delmo-dingo-postgresql-pipeline
+          MACHINE_EXPORT_AWS_ACCESS_KEY_ID:     (( grab meta.docker-machine.access_key ))
+          MACHINE_EXPORT_AWS_SECRET_ACCESS_KEY: (( grab meta.docker-machine.secret_key ))
+          MACHINE_EXPORT_AWS_REGION:            (( grab meta.docker-machine.region ))
+          MACHINE_EXPORT_AWS_BUCKET:            (( grab meta.docker-machine.bucket ))
+          AWS_ACCESS_KEY: (( grab meta.delmo.access_key ))
+          AWS_SECRET_KEY: (( grab meta.delmo.secret_key ))
+          AWS_REGION:     (( grab meta.delmo.region ))
+          AWS_BUCKET:     (( grab meta.delmo.bucket ))
+
+        run:
+          path: /entrypoint.sh
+          args: [delmo, --only-build-task, -f, git/image/tests/delmo.yml, -m, delmo-dingo-postgresql-pipeline]
 
   - name: testflight
     public: true
