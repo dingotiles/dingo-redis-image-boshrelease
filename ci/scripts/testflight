@@ -33,6 +33,9 @@ git submodule update --init --recursive --force
 header "Cleaning up from any previous deployments..."
 bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
 
+header "Importing image into release..."
+gzip -c image/image > image-cache/image.tgz
+
 header "Creating candidate BOSH release..."
 bosh2 -n create-release
 bosh2 -n upload-release --rebase || echo "Continuing..."

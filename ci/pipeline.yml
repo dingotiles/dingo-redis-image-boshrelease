@@ -109,7 +109,7 @@ jobs:
     - do:
       - aggregate:
         - { get: git, trigger: true }
-        - { get: image, resource: docker-image-dingotiles-redis, passed: [image]}
+        - { get: image, resource: docker-image-dingotiles-redis, passed: [image], params: {save: true}}
       - task: testflight
         config:
           platform: linux
