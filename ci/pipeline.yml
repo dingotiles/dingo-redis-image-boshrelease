@@ -185,12 +185,20 @@ jobs:
     public: true
     serial: true
     plan:
-    - do:
-      - name: inputs
-        aggregate:
-          - { get: version, passed: [rc], params: {bump: final} }
+      - aggregate:
+          #- { get: version, passed: [rc], params: {bump: final} }
+          - { get: version, passed: [rc] }
           - { get: git,     passed: [rc] }
-          - { get: image, resource: docker-image-edge, passed: [image], params: {save: true}}
+          - { get: docker-image-edge, passed: [image], params: {save: true}}
+      - put: docker-image-latest
+        params:
+          load: docker-image-edge
+          tag: version/number
+          tag_as_latest: true
+
+  - name: ignore
+    plan:
+    - do:
       - name: release
         task: release
         config:
@@ -288,6 +296,15 @@ resources:
       password: (( grab meta.docker_hub.password ))
       repository: dingotiles/dingo-redis
       tag: "edge"
+
+  - name: docker-image-latest
+    type: docker-image
+    source:
+      email: (( grab meta.docker_hub.email ))
+      username: (( grab meta.docker_hub.username ))
+      password: (( grab meta.docker_hub.password ))
+      repository: dingotiles/dingo-redis
+      tag: "latest"
 
   - name: notify
     type: slack-notification
