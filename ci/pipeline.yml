@@ -185,9 +185,9 @@ jobs:
     public: true
     serial: true
     plan:
+    - do:
       - aggregate:
-          #- { get: version, passed: [rc], params: {bump: final} }
-          - { get: version, passed: [rc] }
+          - { get: version, passed: [rc], params: {bump: final} }
           - { get: git,     passed: [rc] }
           - { get: docker-image-edge, passed: [image], params: {save: true}}
       - put: docker-image-latest
@@ -195,10 +195,6 @@ jobs:
           load: docker-image-edge
           tag: version/number
           tag_as_latest: true
-
-  - name: ignore
-    plan:
-    - do:
       - name: release
         task: release
         config:
