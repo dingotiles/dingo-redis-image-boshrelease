@@ -4,3 +4,9 @@
   value:
     name: dingo-redis-image
     version: latest
+
+- type: replace
+  path: /releases/name=docker
+  value:
+    name: docker
+    version: latest
