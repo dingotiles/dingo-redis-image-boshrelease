@@ -73,6 +73,6 @@
   path: /releases/-
   value:
     name: dingo-redis-image
-    version: 1.0.0
-    url: https://github.com/dingotiles/dingo-redis-image-boshrelease/releases/download/v1.0.0/dingo-redis-image-1.0.0.tgz
-    sha1: 9e7705d38f84a021c559de3499f461a250da16e7
+    version: 1.1.0
+    url: https://github.com/dingotiles/dingo-redis-image-boshrelease/releases/download/v1.1.0/dingo-redis-image-1.1.0.tgz
+    sha1: e6d94dcc42fea8459908771ffcdad6d8323bbe50

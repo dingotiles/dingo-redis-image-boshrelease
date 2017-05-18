@@ -1,0 +1,19 @@
+name: dingo-redis-image
+version: 1.1.0
+commit_hash: 20ab0cb
+uncommitted_changes: false
+jobs:
+- name: dingo-redis-image
+  version: 9d6fdc4a15197dd2483cb4d0a3d1d300df613ff9
+  fingerprint: 9d6fdc4a15197dd2483cb4d0a3d1d300df613ff9
+  sha1: 638ff1a1494bdc22b4b215091c72fe510375e849
+packages:
+- name: dingotiles_dingo_redis_image
+  version: ed4b536cdd5f75a41883f6d09e5eb975e2487ed1
+  fingerprint: ed4b536cdd5f75a41883f6d09e5eb975e2487ed1
+  sha1: 11e121ff9151911cf083e8a68e4b29d6073b0848
+  dependencies: []
+license:
+  version: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  fingerprint: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  sha1: e56c2ef4aba5007fd0d1cede2c0fc785fc20732e
