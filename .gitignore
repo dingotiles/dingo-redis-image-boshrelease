@@ -20,3 +20,6 @@ my*.yml
 ci/credentials.yml
 /.envrc*
 src/image-cache/image.tgz
+src/image-cache/image-id
+src/image-cache/repository
+src/image-cache/tag
