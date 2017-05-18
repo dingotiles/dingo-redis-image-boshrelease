@@ -20,6 +20,10 @@
   value: false
 
 - type: replace
+  path: /instance_groups/name=sanity-test/jobs/name=sanity-test-broker/properties?/fetch_images
+  value: false
+
+- type: replace
   path: /instance_groups/name=docker/jobs/name=cf-containers-broker/properties/services/-
   value:
     id: '0fdcc9c0-14f5-11e7-9d8c-cfde16aa4822'
