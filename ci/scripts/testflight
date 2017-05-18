@@ -25,6 +25,9 @@ export BOSH_DEPLOYMENT=${BOSH_DEPLOYMENT:?required}
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+header "Importing image into release..."
+gzip -c image/image > ${REPO_ROOT}/src/image-cache/image.tgz
+
 set -e
 cd ${REPO_ROOT}
 header "Pulling in any git submodules..."
@@ -32,9 +35,6 @@ git submodule update --init --recursive --force
 
 header "Cleaning up from any previous deployments..."
 bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
-
-header "Importing image into release..."
-gzip -c image/image > image-cache/image.tgz
 
 header "Creating candidate BOSH release..."
 bosh2 -n create-release
