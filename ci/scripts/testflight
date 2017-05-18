@@ -66,7 +66,7 @@ fi
 
 header "Cleaning up..."
 bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
-bosh2 -n cleanup || echo "continuing on..."
+bosh2 -n clean-up || echo "continuing on..."
 
 echo
 echo "SUCCESS"
