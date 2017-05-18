@@ -268,7 +268,7 @@ resources:
     type: semver
     source:
       driver:          git
-      initial_version: 0.6.0
+      initial_version: 1.0.0
       uri:             (( grab meta.github.uri ))
       branch:          version
       file:            version
