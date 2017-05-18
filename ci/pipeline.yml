@@ -67,7 +67,7 @@ jobs:
     - aggregate:
       - {get: docker-image-starkandwayne-redis, params: {skip_download: true}}
       - {get: git}
-    - put: docker-image-dingotiles-redis-edge
+    - put: docker-image-edge
       params:
         build: git/image
 
@@ -76,7 +76,7 @@ jobs:
     plan:
     - aggregate:
       - {get: git, passed: [image]}
-      - {get: docker-image-dingotiles-redis-edge, passed: [image], trigger: true}
+      - {get: docker-image-edge, passed: [image], trigger: true}
     - task: run-delmo-test
       config:
         platform: linux
@@ -109,7 +109,7 @@ jobs:
     - do:
       - aggregate:
         - { get: git, trigger: true }
-        - { get: image, resource: docker-image-dingotiles-redis-edge, passed: [image], params: {save: true}}
+        - { get: image, resource: docker-image-edge, passed: [image], params: {save: true}}
       - task: testflight
         config:
           platform: linux
@@ -190,7 +190,7 @@ jobs:
         aggregate:
           - { get: version, passed: [rc], params: {bump: final} }
           - { get: git,     passed: [rc] }
-          - { get: image, resource: docker-image-dingotiles-redis-edge, passed: [image], params: {save: true}}
+          - { get: image, resource: docker-image-edge, passed: [image], params: {save: true}}
       - name: release
         task: release
         config:
@@ -280,7 +280,7 @@ resources:
       repository: starkandwayne/redis
       tag: "latest"
 
-  - name: docker-image-dingotiles-redis-edge
+  - name: docker-image-edge
     type: docker-image
     source:
       email: (( grab meta.docker_hub.email ))
