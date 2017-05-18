@@ -32,14 +32,14 @@ header "Cleaning up from any previous deployments..."
 bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
 
 header "Installing docker to package the docker image"
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo apt-key fingerprint 0EBFCD88
-sudo apt-get install \
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+apt-key fingerprint 0EBFCD88
+apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     software-properties-common
-sudo add-apt-repository \
+add-apt-repository \
 		   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
 		   $(lsb_release -cs) \
 		   stable"
