@@ -93,8 +93,8 @@ cat >> ${RELEASE_ROOT}/notes.md <<EOF
 releases:
 - name: $RELEASE_NAME
   version: $VERSION
-	url: https://github.com/${GITHUB_OWNER}/${RELEASE_NAME}-boshrelease/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
-	sha1: $SHA1
+  url: https://github.com/${GITHUB_OWNER}/${RELEASE_NAME}-boshrelease/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
+  sha1: $SHA1
 \`\`\`
 EOF
 cat > ${RELEASE_ROOT}/notification <<EOF
