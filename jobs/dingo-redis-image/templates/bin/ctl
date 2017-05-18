@@ -20,13 +20,17 @@ case $1 in
     docker_host=unix:///var/vcap/sys/run/docker/docker.sock
 
     set -x # print commands
-    for image in /var/vcap/packages/*_image/*.tgz; do
-      img_dir=`dirname $image`
+    for image_dir in /var/vcap/packages/*_image; do
+      image=$image_dir/image.tgz
       echo "Loading docker image $image" >>$LOG_DIR/$JOB_NAME.stdout.log
       docker --host $docker_host \
            load -i $image \
              >>$LOG_DIR/$JOB_NAME.stdout.log \
              2>>$LOG_DIR/$JOB_NAME.stderr.log
+
+      if [[ -f $image_dir/image-id ]]; then
+        docker tag $(cat $image_dir/image-id) "$(cat $image_dir/repository):$(cat $image_dir/tag)"
+      fi
     done
 
     # do nothing forever

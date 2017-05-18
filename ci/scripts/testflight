@@ -26,6 +26,9 @@ export BOSH_DEPLOYMENT=${BOSH_DEPLOYMENT:?required}
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 header "Importing image into release..."
+cp image/image-id   > ${REPO_ROOT}/src/image-cache/
+cp image/repository > ${REPO_ROOT}/src/image-cache/
+cp image/tag        > ${REPO_ROOT}/src/image-cache/
 gzip -c image/image > ${REPO_ROOT}/src/image-cache/image.tgz
 
 set -e
