@@ -54,7 +54,11 @@
         tag: 'latest'
         persistent_volumes: [/data]
       credentials:
-        password: {key: 'REDIS_PASSWORD'}
+        password:
+          key: 'REDIS_PASSWORD'
+        uri:
+          prefix: 'redis'
+          port: '6379/tcp'
       metadata:
         bullets:
           - 'Dedicated Redis 3.2 server'
