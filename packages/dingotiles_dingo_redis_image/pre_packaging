@@ -3,5 +3,7 @@
 set -o pipefail
 set -e -x
 
-image=dingotiles/dingo-redis:latest
-docker save $image | gzip -c > image.tgz
+if [[ ! -f image-cache/image.tgz ]]; then
+  image=dingotiles/dingo-redis:latest
+  docker save $image | gzip -c > image-cache/image.tgz
+fi

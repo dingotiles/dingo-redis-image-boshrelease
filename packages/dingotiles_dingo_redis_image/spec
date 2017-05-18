@@ -1,3 +1,4 @@
 ---
 name: dingotiles_dingo_redis_image
-files: []
+files:
+- "image-cache/*"
