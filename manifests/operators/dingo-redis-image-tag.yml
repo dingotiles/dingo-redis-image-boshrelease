@@ -1,0 +1,12 @@
+---
+- type: replace
+  path: /instance_groups/name=docker/jobs/name=cf-containers-broker/properties/services/name=dingo-redis/plans/name=ready/container/tag
+  value: ((dingo-redis-image-tag))
+
+- type: replace
+  path: /instance_groups/name=docker/jobs/name=cf-containers-broker/properties/fetch_images
+  value: true
+
+- type: replace
+  path: /instance_groups/name=sanity-test/jobs/name=sanity-test-broker/properties?/fetch_images
+  value: true
