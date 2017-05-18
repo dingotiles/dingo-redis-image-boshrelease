@@ -8,7 +8,7 @@ meta:
     access_key: (( vault "secret/pipelines/" meta.github.repo "/aws:access_key"))
     secret_key: (( vault "secret/pipelines/" meta.github.repo "/aws:secret_key"))
   github:
-    owner: cloudfoundry-community
+    owner: dingotiles
     repo: (( concat meta.name "-boshrelease" ))
     access_token: (( vault "secret/pipelines/" meta.github.repo "/github:access_token"))
     private_key:  (( vault "secret/pipelines/" meta.github.repo "/github:private_key"))

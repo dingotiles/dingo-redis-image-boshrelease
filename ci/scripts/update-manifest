@@ -1,9 +1,10 @@
 #!/bin/bash
 
-RELEASE_NAME=$1
-VERSION=$2
-SHA1=$3
-: ${SHA1:?USAGE: ./ci/scripts/update-manifest RELEASE_NAME VERSION SHA1}
+GITHUB_OWNER=$1
+RELEASE_NAME=$2
+VERSION=$3
+SHA1=$4
+: ${SHA1:?USAGE: ./ci/scripts/update-manifest GITHUB_OWNER RELEASE_NAME VERSION SHA1}
 
 set -e -u
 
@@ -14,6 +15,6 @@ cat > $manifest_path <<YAML
 ${manifest_head}
 - name: $RELEASE_NAME
   version: $VERSION
-  url: https://github.com/cloudfoundry-community/${RELEASE_NAME}-boshrelease/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
+  url: https://github.com/${GITHUB_OWNER}/${RELEASE_NAME}-boshrelease/releases/download/v${VERSION}/${RELEASE_NAME}-${VERSION}.tgz
   sha1: $SHA1
 YAML
