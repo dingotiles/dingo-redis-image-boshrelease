@@ -3,6 +3,7 @@ version: '2'
 services:
   redis:
     image: dingotiles/dingo-redis:edge
+    build: .
     ports:
     - 6379:6379
     environment:
@@ -14,6 +15,7 @@ services:
       SHIELD_BACKUPS_SCHEDULE: daily
     links:
     - shield
+    - agent
   shield:
     image: starkandwayne/shield:edge
     ports:
@@ -46,7 +48,7 @@ services:
     command: "start starkandwayne/postgresql --group shield"
   tests:
     image: starkandwayne-redis-tests
-    build: ./
+    build: tests
     environment:
       REDIS_PASSWORD: secretpassword
       REDIS_HOST: redis
