@@ -1,0 +1,5 @@
+---
+- type: replace
+  path: /instance_groups/name=docker/instances
+  value: 1
+
