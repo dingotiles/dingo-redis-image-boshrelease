@@ -37,6 +37,8 @@ case $1 in
     echo "<%= retention %>"   > SHIELD_BACKUPS_RETENTION
     echo "<%= store %>"       > SHIELD_BACKUPS_STORE
 
+    echo "<%= spec.address %>" > DOCKER_HOST_IP
+
     tail -f /dev/null
 
     ;;

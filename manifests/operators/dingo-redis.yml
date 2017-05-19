@@ -16,6 +16,10 @@
     release: dingo-redis-image
 
 - type: replace
+  path: /instance_groups/name=docker/jobs/name=cf-containers-broker/properties/enable_host_port_envvar
+  value: true
+
+- type: replace
   path: /instance_groups/name=docker/jobs/name=cf-containers-broker/properties/fetch_images
   value: false
 
