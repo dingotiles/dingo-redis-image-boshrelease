@@ -57,4 +57,4 @@ echo "{\"hosthame\":\"localhost\",\"host\":\"localhost\",\"port\":6379,\"passwor
 echo /config/credentials.json
 cat /config/credentials.json
 
-exec /init.sh "$@"
+exec /init.sh start starkandwayne/redis --group "${NAME:-default}" "$@"
