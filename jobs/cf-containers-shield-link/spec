@@ -17,11 +17,11 @@ consumes:
 properties:
   backups.schedule:
     description: Default SHIELD schedule for all cf-containers-broker containers
-    default: "default"
+    default: "daily"
 
   backups.retention-policy:
     description: Default SHIELD retention policy for all cf-containers-broker containers
-    default: "default"
+    default: "shortterm"
 
   backups.store:
     description: Default SHIELD store backend for all cf-containers-broker containers
