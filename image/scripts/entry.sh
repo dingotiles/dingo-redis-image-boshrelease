@@ -34,10 +34,12 @@ env | \
 
 if [[ "${SHIELD_ENDPOINT:-X}" != "X" ]]; then
   # $DOCKER_HOST_IP comes from jobs/cf-containers-shield-link/templates/bin/ctl
-  echo "shield_agent_advertise_ip   = \"${DOCKER_HOST_IP:?required if enabling SHIELD backups}\"" >> /env.toml
-  # $DOCKER_HOST_PORT_5444 comes from cf-containers-broker docker_manager.rb #append_port_binding_envvars method
-  # when Settings.enable_host_port_envvar enabled
-  echo "shield_agent_advertise_port = \"${DOCKER_HOST_PORT_5444:?required if enabling SHIELD backups}\"" >> /env.toml
+  if [[ ${DOCKER_HOST_IP:-X} != "X" ]]; then
+    echo "shield_agent_advertise_ip   = \"${DOCKER_HOST_IP}\"" >> /env.toml
+    # $DOCKER_HOST_PORT_5444 comes from cf-containers-broker docker_manager.rb #append_port_binding_envvars method
+    # when Settings.enable_host_port_envvar enabled
+    echo "shield_agent_advertise_port = \"${DOCKER_HOST_PORT_5444:?required if enabling SHIELD backups}\"" >> /env.toml
+  fi
 
   echo "bootstrap_from_backup =    true" >> /env.toml
   echo "shield_endpoint =          \"${SHIELD_ENDPOINT}\"" >> /env.toml
