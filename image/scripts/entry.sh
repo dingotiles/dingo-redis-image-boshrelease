@@ -43,7 +43,7 @@ if [[ "${SHIELD_ENDPOINT:-X}" != "X" ]]; then
   echo "shield_endpoint =          \"${SHIELD_ENDPOINT}\"" >> /env.toml
   echo "shield_skip_ssl_verify =   ${SHIELD_SKIP_SSL_VERIFY:-true}" >> /env.toml
   echo "shield_provisioning_key =  \"${SHIELD_PROVISIONING_KEY:?required if enabling SHIELD backups}\"" >> /env.toml
-  echo "backup_store =             \"${SHIELD_BACKUPS_STORE:?required if enabling SHIELD backups}\"" >> /env.toml
+  echo "backups_store =            \"${SHIELD_BACKUPS_STORE:?required if enabling SHIELD backups}\"" >> /env.toml
   echo "backups_retention =        \"${SHIELD_BACKUPS_RETENTION:?required if enabling SHIELD backups}\"" >> /env.toml
   echo "backups_schedule =         \"${SHIELD_BACKUPS_SCHEDULE:?required if enabling SHIELD backups}\"" >> /env.toml
 fi
