@@ -41,6 +41,7 @@ if [[ "${SHIELD_ENDPOINT:-X}" != "X" ]]; then
   echo "backups_schedule =         \"${SHIELD_BACKUPS_SCHEDULE:?required if enabling SHIELD backups}\"" > /env.toml
 fi
 
+cat /env.toml
 eval "export HAB_${service}='$(cat /env.toml)'"
 
 mkdir -p /config
