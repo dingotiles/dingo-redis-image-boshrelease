@@ -108,8 +108,8 @@ jobs:
     plan:
     - do:
       - aggregate:
-        - { get: git, trigger: true }
-        - { get: image, resource: docker-image-edge, passed: [image], params: {save: true}}
+        - { get: git }
+        - { get: image, resource: docker-image-edge, passed: [image], trigger: true, params: {save: true}}
       - task: testflight
         config:
           platform: linux
