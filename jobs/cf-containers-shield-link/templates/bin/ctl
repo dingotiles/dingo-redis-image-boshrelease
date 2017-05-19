@@ -29,6 +29,7 @@ case $1 in
       retention = p('backups.retention-policy')
       store     = p('backups.store')
     -%>
+    mkdir -p /var/vcap/store/cf-containers-broker/envdir
     cd /var/vcap/store/cf-containers-broker/envdir
     echo "<%= daemon_url %>"  > SHIELD_ENDPOINT
     echo "<%= api_key %>"     > SHIELD_API_KEY
