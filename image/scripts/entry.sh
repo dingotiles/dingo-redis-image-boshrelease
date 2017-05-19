@@ -33,19 +33,22 @@ env | \
   tr '[:upper:]' '[:lower:]' > /env.toml
 
 if [[ "${SHIELD_ENDPOINT:-X}" != "X" ]]; then
+  echo "bootstrap_from_backup =    true" >> /env.toml
   echo "shield_endpoint =          \"${SHIELD_ENDPOINT}\"" >> /env.toml
+  echo "shield_skip_ssl_verify =   ${SHIELD_SKIP_SSL_VERIFY:-true}" >> /env.toml
   echo "shield_provisioning_key =  \"${SHIELD_PROVISIONING_KEY:?required if enabling SHIELD backups}\"" >> /env.toml
-  echo "shield_skip_ssl_verify =   \"${SHIELD_SKIP_SSL_VERIFY:-true}\"" >> /env.toml
   echo "backup_store =             \"${SHIELD_BACKUPS_STORE:?required if enabling SHIELD backups}\"" >> /env.toml
   echo "backups_retention =        \"${SHIELD_BACKUPS_RETENTION:?required if enabling SHIELD backups}\"" >> /env.toml
   echo "backups_schedule =         \"${SHIELD_BACKUPS_SCHEDULE:?required if enabling SHIELD backups}\"" >> /env.toml
 fi
 
+echo /env.toml
 cat /env.toml
 eval "export HAB_${service}='$(cat /env.toml)'"
 
 mkdir -p /config
 echo "{\"hosthame\":\"localhost\",\"host\":\"localhost\",\"port\":6379,\"password\":\"$REDIS_PASSWORD\"}" > /config/credentials.json
 echo /config/credentials.json
+cat /config/credentials.json
 
 exec /init.sh "$@"
