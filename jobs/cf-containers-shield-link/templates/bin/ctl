@@ -32,11 +32,10 @@ case $1 in
     mkdir -p /var/vcap/store/cf-containers-broker/envdir
     cd /var/vcap/store/cf-containers-broker/envdir
     echo "<%= daemon_url %>"  > SHIELD_ENDPOINT
-    echo "<%= api_key %>"     > SHIELD_API_KEY
+    echo "<%= api_key %>"     > SHIELD_PROVISIONING_KEY
     echo "<%= schedule %>"    > SHIELD_BACKUPS_SCHEDULE
     echo "<%= retention %>"   > SHIELD_BACKUPS_RETENTION
     echo "<%= store %>"       > SHIELD_BACKUPS_STORE
-    echo "true"               > SHIELD_BOOTSTRAP_FROM_BACKUP
 
     tail -f /dev/null
 
