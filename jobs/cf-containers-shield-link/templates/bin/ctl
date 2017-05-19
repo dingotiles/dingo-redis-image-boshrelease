@@ -23,7 +23,7 @@ case $1 in
         daemon_url = "https://#{domain}"
       end
       unless api_key   = p('shield-daemon.provisioning_key', nil)
-        api_key = link("shield-daemon").p("auth.api_keys").first
+        api_key = link("shield-daemon").p("auth.api_keys").values.first
       end
       schedule  = p('backups.schedule')
       retention = p('backups.retention-policy')
