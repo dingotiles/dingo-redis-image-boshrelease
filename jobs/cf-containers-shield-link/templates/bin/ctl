@@ -33,6 +33,8 @@ case $1 in
     cd /var/vcap/store/cf-containers-broker/envdir
     echo "<%= daemon_url %>"  > SHIELD_ENDPOINT
     echo "<%= api_key %>"     > SHIELD_PROVISIONING_KEY
+    echo "<%= api_key %>"     > SHIELD_API_TOKEN
+    echo "true"               > SHIELD_SKIP_SSL_VERIFY
     echo "<%= schedule %>"    > SHIELD_BACKUPS_SCHEDULE
     echo "<%= retention %>"   > SHIELD_BACKUPS_RETENTION
     echo "<%= store %>"       > SHIELD_BACKUPS_STORE
