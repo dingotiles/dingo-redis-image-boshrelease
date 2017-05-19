@@ -3,16 +3,15 @@ version: '2'
 services:
   redis:
     image: dingotiles/dingo-redis:edge
-    command: "--peer shield"
     ports:
     - 6379:6379
     environment:
       REDIS_PASSWORD: secretpassword
-      REDIS_BOOTSTRAP_FROM_BACKUP: "true"
-      REDIS_SHIELD_ENDPOINT: https://shield
-      REDIS_BACKUPS_SCHEDULE: daily
-      REDIS_BACKUPS_RETENTION: shortterm
-      REDIS_BACKUPS_STORE: default
+      SHIELD_ENDPOINT: https://shield
+      SHIELD_PROVISIONING_KEY: autoprovision
+      SHIELD_BACKUPS_STORE: default
+      SHIELD_BACKUPS_RETENTION: shortterm
+      SHIELD_BACKUPS_SCHEDULE: daily
     links:
     - shield
   shield:
