@@ -75,7 +75,7 @@ jobs:
     public: true
     plan:
     - aggregate:
-      - {get: git, passed: [image]}
+      - {get: git}
       - {get: docker-image-edge, passed: [image], trigger: true}
     - task: run-delmo-test
       config:
