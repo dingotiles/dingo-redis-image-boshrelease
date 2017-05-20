@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e -x
+
+chmod +x jq/*
+mkdir -p ${BOSH_INSTALL_TARGET}/bin
+cp jq/* ${BOSH_INSTALL_TARGET}/bin/.

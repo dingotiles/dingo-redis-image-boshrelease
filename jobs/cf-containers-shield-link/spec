@@ -1,7 +1,7 @@
 ---
 name: cf-containers-shield-link
 
-packages: [shield]
+packages: [shield, jq]
 
 templates:
   bin/ctl: bin/ctl
