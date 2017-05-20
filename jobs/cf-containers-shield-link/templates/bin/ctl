@@ -82,10 +82,10 @@ case $1 in
 
     mkdir -p /var/vcap/store/cf-containers-broker/envdir
     cd /var/vcap/store/cf-containers-broker/envdir
-    echo "<%= daemon_url %>"  > SHIELD_ENDPOINT
-    echo "<%= api_key %>"     > SHIELD_PROVISIONING_KEY
-    echo "<%= api_key %>"     > SHIELD_API_TOKEN
-    echo "true"               > SHIELD_SKIP_SSL_VERIFY
+    echo "<%= daemon_url %>"     > SHIELD_ENDPOINT
+    echo "$SHIELD_API_TOKEN"     > SHIELD_PROVISIONING_KEY
+    echo "$SHIELD_API_TOKEN"     > SHIELD_API_TOKEN
+    echo "true"                  > SHIELD_SKIP_SSL_VERIFY
     echo "$SHIELD_SCHEDULE_NAME" > SHIELD_BACKUPS_SCHEDULE
     echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION
     echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION_POLICY
