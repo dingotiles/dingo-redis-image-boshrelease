@@ -69,6 +69,9 @@ fi
 
 header "Deploying with SHIELD integration..."
 
+# need to ensure shield defaults are in shield-daemon; or set them?
+# daily, shortterm - only create if missing
+
 bosh2 -n deploy manifests/docker-broker.yml \
   -o manifests/operators/dingo-redis.yml \
 	--vars-store tmp/creds.yml \

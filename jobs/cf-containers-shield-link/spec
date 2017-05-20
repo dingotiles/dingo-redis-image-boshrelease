@@ -15,16 +15,16 @@ consumes:
   optional: true
 
 properties:
-  backups.schedule:
+  backups.schedule.name:
     description: Default SHIELD schedule for all cf-containers-broker containers
     default: "daily"
 
-  backups.retention-policy:
+  backups.retention-policy.name:
     description: Default SHIELD retention policy for all cf-containers-broker containers
     default: "shortterm"
 
-  backups.store:
-    description: Default SHIELD store backend for all cf-containers-broker containers
+  backups.store.name:
+    description: Specify SHIELD store backend for all cf-containers-broker containers; else default to first available
     default: "default"
 
   shield-daemon.endpoint:
