@@ -1,7 +1,8 @@
 ---
 name: cf-containers-shield-link
 
-packages: []
+packages: [shield]
+
 templates:
   bin/ctl: bin/ctl
   bin/monit_debugger: bin/monit_debugger
