@@ -16,6 +16,9 @@ header() {
 	echo
 }
 
+curl https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-2.0.17-linux-amd64 -o /usr/bin/bosh2
+chmod +x /usr/bin/bosh2
+
 header "Setting up bosh2 config..."
 export BOSH_ENVIRONMENT=${BOSH_ENVIRONMENT:?required}
 export BOSH_CA_CERT=${BOSH_CA_CERT:?required}
