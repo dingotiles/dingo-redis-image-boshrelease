@@ -25,36 +25,57 @@ case $1 in
       unless api_key   = p('shield-daemon.provisioning_key', nil)
         api_key = link("shield-daemon").p("auth.api_keys").values.first
       end
-      schedule = p('backups.schedule.name')
-      policy   = p('backups.retention-policy.name')
-      store    = p('backups.store.name')
     -%>
-    SHIELD_CONFIG=$(mktemp --tmpdir auto.XXXXXX)
-    trap "rm -rf ${SHIELD_CONFIG}" INT TERM QUIT EXIT
-
     export SHIELD_API_TOKEN=<%= api_key %>
     export SHIELD_SKIP_SSL_VERIFY=true
 
     # Create a specific  config file for shield-agent stuff, to avoid race
     # conditions in case we are colocated with shield-daemon.
-    shield -c ${SHIELD_CONFIG} create-backend default <%= daemon_url %>
+    shield create-backend default <%= daemon_url %>
 
-    store_uuid=$(   shield stores    --raw | jq -r ".[] | select(.name == \"<%= store %>\")| .uuid // \"\"")
-    schedule_uuid=$(shield schedules --raw | jq -r ".[] | select(.name == \"<%= schedule %>\")| .uuid // \"\"")
-    policy_uuid=$(  shield policies  --raw | jq -r ".[] | select(.name == \"<%= policy %>\")| .uuid // \"\"")
     errors=no
-    if [[ "${store_uuid:-X}" == "X" ]]; then
+    <% if store = p("backups.store.name", nil) -%>
+    SHIELD_STORE_NAME=$(shield stores --raw | jq -r ".[] | select(.name == \"<%= store %>\")| .name // \"\"")
+    if [[ "${SHIELD_STORE_NAME:-X}" == "X" ]]; then
       echo "ERROR: requested SHIELD store '<%= store %>' does not exist."
       errors=yes
     fi
-    if [[ "${schedule_uuid:-X}" == "X" ]]; then
-      echo "ERROR: requested SHIELD store '<%= schedule %>' does not exist."
+    <% else -%>
+    SHIELD_STORE_NAME=$(shield stores --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_STORE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD stores have been configured yet, cannot default to first one."
       errors=yes
     fi
-    if [[ "${policy_uuid:-X}" == "X" ]]; then
-      echo "ERROR: requested SHIELD store '<%= policy %>' does not exist."
+    <% end -%>
+
+    <% if policy = p("backups.retention-policy.name", nil) -%>
+    SHIELD_POLICY_NAME=$(shield policies --raw | jq -r ".[] | select(.name == \"<%= policy %>\")| .name // \"\"")
+    if [[ "${SHIELD_POLICY_NAME:-X}" == "X" ]]; then
+      echo "ERROR: requested SHIELD retention policy '<%= policy %>' does not exist."
       errors=yes
     fi
+    <% else -%>
+    SHIELD_POLICY_NAME=$(shield policies --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_POLICY_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD retention policies have been configured yet, cannot default to first one."
+      errors=yes
+    fi
+    <% end -%>
+
+    <% if schedule = p("backups.schedule.name", nil) -%>
+    SHIELD_SCHEDULE_NAME=$(shield schedules --raw | jq -r ".[] | select(.name == \"<%= schedule %>\")| .name // \"\"")
+    if [[ "${SHIELD_SCHEDULE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: requested SHIELD schedule '<%= schedule %>' does not exist."
+      errors=yes
+    fi
+    <% else -%>
+    SHIELD_SCHEDULE_NAME=$(shield schedules --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_SCHEDULE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD schedules have been configured yet, cannot default to first one."
+      errors=yes
+    fi
+    <% end -%>
+
     if [[ "${errors}" == "yes" ]]; then
       exit 1
     fi
@@ -65,11 +86,11 @@ case $1 in
     echo "<%= api_key %>"     > SHIELD_PROVISIONING_KEY
     echo "<%= api_key %>"     > SHIELD_API_TOKEN
     echo "true"               > SHIELD_SKIP_SSL_VERIFY
-    echo "<%= schedule %>"    > SHIELD_BACKUPS_SCHEDULE
-    echo "<%= policy %>"      > SHIELD_BACKUPS_RETENTION
-    echo "<%= policy %>"      > SHIELD_BACKUPS_RETENTION_POLICY
-    echo "<%= policy %>"      > SHIELD_BACKUPS_POLICY
-    echo "<%= store %>"       > SHIELD_BACKUPS_STORE
+    echo "$SHIELD_SCHEDULE_NAME" > SHIELD_BACKUPS_SCHEDULE
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION_POLICY
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_POLICY
+    echo "$SHIELD_STORE_NAME"    > SHIELD_BACKUPS_STORE
 
     echo "<%= spec.address %>" > DOCKER_HOST_IP
 
