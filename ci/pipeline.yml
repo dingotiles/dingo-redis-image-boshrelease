@@ -38,6 +38,9 @@ meta:
     bosh_ca_cert: (( param "Please specify the root CA cert for target BOSH" ))
     bosh_client: admin
     bosh_client_secret: (( param "Please specify the BOSH admin password" ))
+    gw_host: (( param "Please specify BOSH gateway host for bosh2 logs" ))
+    gw_user: (( param "Please specify BOSH user for bosh2 logs" ))
+    gw_private_key: (( param "Please specify BOSH private key for bosh2 logs" ))
 
   slack:
     webhook:       (( param "Please specify your Slack Incoming Webhook Integration URL" ))
@@ -127,6 +130,9 @@ jobs:
             BOSH_CLIENT:          (( grab meta.bosh-lite.bosh_client ))
             BOSH_CLIENT_SECRET:   (( grab meta.bosh-lite.bosh_client_secret ))
             BOSH_DEPLOYMENT:      (( grab meta.bosh-lite.deployment ))
+            BOSH_GW_HOST:         (( grab meta.bosh-lite.gw_host ))
+            BOSH_GW_USER:         (( grab meta.bosh-lite.gw_user ))
+            BOSH_GW_PRIVATE_KEY:  (( grab meta.bosh-lite.gw_private_key ))
             TEST_ERRANDS:         (( grab meta.test-errands || ~ ))
       on_failure:
         put: notify

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+mkdir -p /tmp/ssh
+chmod 700 /tmp/ssh
+echo "$BOSH_GW_PRIVATE_KEY" > /tmp/ssh/bosh.pem
+chmod 600 /tmp/ssh/bosh.pem
+export BOSH_GW_PRIVATE_KEY=/tmp/ssh/bosh.pem
+
+echo BOSH_GW_HOST=$BOSH_GW_HOST
+echo BOSH_GW_USER=$BOSH_GW_USER
+echo BOSH_GW_PRIVATE_KEY=/tmp/ssh/bosh.pem
+bosh2 ssh -c "tail -n 100 /var/vcap/sys/log/**/*.log"

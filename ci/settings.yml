@@ -18,6 +18,9 @@ meta:
     bosh_ca_cert: (( vault "secret/bosh-lites/lite49" "/certs:rootCA.pem" ))
     bosh_client: admin
     bosh_client_secret: (( vault "secret/bosh-lites/lite49" "/users/admin:password" ))
+    gw_host:        (( vault "secret/bosh-lites/lite49" "/env:ip" ))
+    gw_user:        (( vault "secret/bosh-lites" "/ssh:user" ))
+    gw_private_key: (( vault "secret/bosh-lites" "/ssh:private" ))
     cf:
       api_url: (( vault "secret/bosh-lites/lite49" "/cf:api_url" ))
       system_domain: (( vault "secret/bosh-lites/lite49" "/cf:system_domain" ))
