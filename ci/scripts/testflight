@@ -83,7 +83,7 @@ bosh2 -n deploy manifests/docker-broker.yml \
 	-o manifests/operators/dev.yml \
 	-o tmp/name.yml \
 	-o manifests/operators/shield.yml || (
-		bosh ssh -c "tail -n 100 /var/vcap/sys/log/**/*.log"
+		bosh2 ssh -c "tail -n 100 /var/vcap/sys/log/**/*.log"
 		exit 1
 	)
 
