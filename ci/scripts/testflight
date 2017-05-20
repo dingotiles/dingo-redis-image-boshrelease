@@ -79,7 +79,10 @@ bosh2 -n deploy manifests/docker-broker.yml \
 	-v dingo-redis-image-tag=edge \
 	-o manifests/operators/dev.yml \
 	-o tmp/name.yml \
-	-o manifests/operators/shield.yml
+	-o manifests/operators/shield.yml || (
+		bosh ssh -c "tail -n 100 /var/vcap/sys/log/**/*.log"
+		exit 1
+	)
 
 if [[ -n ${TEST_ERRANDS} ]]; then
 	for errand in ${TEST_ERRANDS}; do
