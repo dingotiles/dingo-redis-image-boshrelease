@@ -77,9 +77,9 @@ header "Deploying with SHIELD integration..."
 
 cat > tmp/shield-deployment.yml <<YAML
 ---
-type: replace
-path: /instance_groups/name=docker/jobs/name=cf-containers-shield-link/consumes/shield-daemon/deployment
-value: ${SHIELD_DEPLOYMENT}
+- type: replace
+  path: /instance_groups/name=docker/jobs/name=cf-containers-shield-link/consumes/shield-daemon/deployment
+  value: ${SHIELD_DEPLOYMENT}
 YAML
 
 bosh2 -n deploy manifests/docker-broker.yml \
