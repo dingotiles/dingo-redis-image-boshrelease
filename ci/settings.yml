@@ -66,9 +66,8 @@ jobs:
           rootfs_uri: (( grab meta.image ))
           inputs:
             - { name: git }
-            - { name: image }
           run:
-            path: ./git/ci/scripts/testflight
+            path: ./git/ci/scripts/deploy-shield
             args: []
           params:
             REPO_ROOT:            git
