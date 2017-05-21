@@ -34,6 +34,8 @@ meta:
     access_token: (( param "Please generate a Personal Access Token to be used for creating github releases (do you have a ci-bot?)" ))
 
   bosh-lite:
+    deployment: (( param "Please specify deployment name" ))
+    deployment-shield: (( param "Please specify deployment name for SHIELD deployment" ))
     bosh_environment: (( param "Please specify the BOSH target URI for the bosh-lite to run test deployments against" ))
     bosh_ca_cert: (( param "Please specify the root CA cert for target BOSH" ))
     bosh_client: admin
@@ -134,6 +136,7 @@ jobs:
             BOSH_GW_USER:         (( grab meta.bosh-lite.gw_user ))
             BOSH_GW_PRIVATE_KEY:  (( grab meta.bosh-lite.gw_private_key ))
             TEST_ERRANDS:         (( grab meta.test-errands || ~ ))
+            SHIELD_DEPLOYMENT:    (( grab meta.bosh-lite.deployment-shield ))
       on_failure:
         put: notify
         params:
