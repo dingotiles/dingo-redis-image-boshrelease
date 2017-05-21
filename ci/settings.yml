@@ -59,18 +59,20 @@ jobs:
     plan:
     - do:
       - aggregate:
-        - { get: git, resource: git-shield }
+        - { get: git }
+        - { get: git-shield }
       - task: deploy-shield
         config:
           platform: linux
           rootfs_uri: (( grab meta.image ))
           inputs:
             - { name: git }
+            - { name: git-shield }
           run:
             path: ./git/ci/scripts/deploy-shield
             args: []
           params:
-            REPO_ROOT:            git
+            REPO_ROOT:            git-shield
             BOSH_ENVIRONMENT:     (( grab meta.bosh-lite.bosh_environment ))
             BOSH_CA_CERT:         (( grab meta.bosh-lite.bosh_ca_cert ))
             BOSH_CLIENT:          (( grab meta.bosh-lite.bosh_client ))
