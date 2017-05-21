@@ -1,0 +1,5 @@
+check process cf-containers-shield-link
+  with pidfile /var/vcap/sys/run/cf-containers-shield-link/cf-containers-shield-link.pid
+  start program "/var/vcap/jobs/cf-containers-shield-link/bin/monit_debugger ctl '/var/vcap/jobs/cf-containers-shield-link/bin/ctl start'"
+  stop program "/var/vcap/jobs/cf-containers-shield-link/bin/monit_debugger ctl '/var/vcap/jobs/cf-containers-shield-link/bin/ctl stop'"
+  group vcap

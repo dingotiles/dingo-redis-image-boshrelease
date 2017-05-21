@@ -1,0 +1,111 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+
+# Setup env vars and folders for the webapp_ctl script
+source /var/vcap/jobs/cf-containers-shield-link/helpers/ctl_setup.sh 'cf-containers-shield-link'
+
+export LANG=en_US.UTF-8
+
+case $1 in
+
+  start)
+    pid_guard $PIDFILE $JOB_NAME
+
+    # store pid in $PIDFILE
+    echo $$ > $PIDFILE
+
+    <%
+      unless daemon_url = p("shield-daemon.endpoint", nil)
+        daemon = link("shield-daemon")
+        domain = daemon.p("domain", daemon.instances.first.address)
+        daemon_url = "https://#{domain}"
+      end
+      unless api_key   = p('shield-daemon.provisioning_key', nil)
+        api_key = link("shield-daemon").p("auth.api_keys").values.first
+      end
+    -%>
+    export SHIELD_API_TOKEN=<%= api_key %>
+    export SHIELD_SKIP_SSL_VERIFY=true
+
+    # Create a specific  config file for shield-agent stuff, to avoid race
+    # conditions in case we are colocated with shield-daemon.
+    shield create-backend default <%= daemon_url %>
+
+    errors=no
+    <% if store = p("backups.store.name", nil) -%>
+    SHIELD_STORE_NAME=$(shield stores --raw | jq -r ".[] | select(.name == \"<%= store %>\")| .name // \"\"")
+    if [[ "${SHIELD_STORE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: requested SHIELD store '<%= store %>' does not exist."
+      errors=yes
+    fi
+    <% else -%>
+    SHIELD_STORE_NAME=$(shield stores --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_STORE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD stores have been configured yet, cannot default to first one."
+      errors=yes
+    fi
+    <% end -%>
+
+    <% if policy = p("backups.retention-policy.name", nil) -%>
+    SHIELD_POLICY_NAME=$(shield policies --raw | jq -r ".[] | select(.name == \"<%= policy %>\")| .name // \"\"")
+    if [[ "${SHIELD_POLICY_NAME:-X}" == "X" ]]; then
+      echo "ERROR: requested SHIELD retention policy '<%= policy %>' does not exist."
+      errors=yes
+    fi
+    <% else -%>
+    SHIELD_POLICY_NAME=$(shield policies --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_POLICY_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD retention policies have been configured yet, cannot default to first one."
+      errors=yes
+    fi
+    <% end -%>
+
+    <% if schedule = p("backups.schedule.name", nil) -%>
+    SHIELD_SCHEDULE_NAME=$(shield schedules --raw | jq -r ".[] | select(.name == \"<%= schedule %>\")| .name // \"\"")
+    if [[ "${SHIELD_SCHEDULE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: requested SHIELD schedule '<%= schedule %>' does not exist."
+      errors=yes
+    fi
+    <% else -%>
+    SHIELD_SCHEDULE_NAME=$(shield schedules --raw | jq -r ".[0] | .name // \"\"")
+    if [[ "${SHIELD_SCHEDULE_NAME:-X}" == "X" ]]; then
+      echo "ERROR: No SHIELD schedules have been configured yet, cannot default to first one."
+      errors=yes
+    fi
+    <% end -%>
+
+    if [[ "${errors}" == "yes" ]]; then
+      exit 1
+    fi
+
+    mkdir -p /var/vcap/store/cf-containers-broker/envdir
+    cd /var/vcap/store/cf-containers-broker/envdir
+    echo "<%= daemon_url %>"     > SHIELD_ENDPOINT
+    echo "$SHIELD_API_TOKEN"     > SHIELD_PROVISIONING_KEY
+    echo "$SHIELD_API_TOKEN"     > SHIELD_API_TOKEN
+    echo "true"                  > SHIELD_SKIP_SSL_VERIFY
+    echo "$SHIELD_SCHEDULE_NAME" > SHIELD_BACKUPS_SCHEDULE
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_RETENTION_POLICY
+    echo "$SHIELD_POLICY_NAME"   > SHIELD_BACKUPS_POLICY
+    echo "$SHIELD_STORE_NAME"    > SHIELD_BACKUPS_STORE
+
+    echo "<%= spec.address %>" > DOCKER_HOST_IP
+
+    tail -f /dev/null
+
+    ;;
+
+  stop)
+    kill_and_wait $PIDFILE
+
+    ;;
+  *)
+    echo "Usage: ctl {start|stop}"
+
+    ;;
+
+esac
+exit 0

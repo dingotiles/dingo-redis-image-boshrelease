@@ -14,10 +14,14 @@ meta:
     private_key:  (( vault "secret/pipelines/" meta.github.repo "/github:private_key"))
   bosh-lite:
     deployment: (( concat meta.name "-testflight" ))
+    deployment-shield: (( concat meta.name "-shield" ))
     bosh_environment: (( vault "secret/bosh-lites/lite49" "/env:ip" ))
     bosh_ca_cert: (( vault "secret/bosh-lites/lite49" "/certs:rootCA.pem" ))
     bosh_client: admin
     bosh_client_secret: (( vault "secret/bosh-lites/lite49" "/users/admin:password" ))
+    gw_host:        (( vault "secret/bosh-lites/lite49" "/env:ip" ))
+    gw_user:        (( vault "secret/bosh-lites" "/ssh:user" ))
+    gw_private_key: (( vault "secret/bosh-lites" "/ssh:private" ))
     cf:
       api_url: (( vault "secret/bosh-lites/lite49" "/cf:api_url" ))
       system_domain: (( vault "secret/bosh-lites/lite49" "/cf:system_domain" ))
@@ -39,6 +43,54 @@ meta:
     secret_key: (( vault "secret/pipelines/" meta.github.repo "/delmo:secret_key"))
     region: (( vault "secret/pipelines/" meta.github.repo "/delmo:region"))
     bucket: (( vault "secret/pipelines/" meta.github.repo "/delmo:bucket"))
+  shield:
+    bucket: dingo-redis-image-boshrelease
   slack:
     channel: Please specify the channel (#name) or user (@user) to send messages to
     webhook: Please specify your Slack Incoming Webhook Integration URL
+
+groups:
+  - name: (( grab meta.pipeline ))
+    jobs:
+      - shield
+
+jobs:
+  - name: shield
+    public: true
+    serial: true
+    plan:
+    - do:
+      - aggregate:
+        - { get: git }
+        - { get: git-shield }
+      - task: deploy-shield
+        config:
+          platform: linux
+          rootfs_uri: (( grab meta.image ))
+          inputs:
+            - { name: git }
+            - { name: git-shield }
+          run:
+            path: ./git/ci/scripts/deploy-shield
+            args: []
+          params:
+            REPO_ROOT:            git-shield
+            BOSH_ENVIRONMENT:     (( grab meta.bosh-lite.bosh_environment ))
+            BOSH_CA_CERT:         (( grab meta.bosh-lite.bosh_ca_cert ))
+            BOSH_CLIENT:          (( grab meta.bosh-lite.bosh_client ))
+            BOSH_CLIENT_SECRET:   (( grab meta.bosh-lite.bosh_client_secret ))
+            BOSH_DEPLOYMENT:      (( grab meta.bosh-lite.deployment-shield ))
+            BOSH_GW_HOST:         (( grab meta.bosh-lite.gw_host ))
+            BOSH_GW_USER:         (( grab meta.bosh-lite.gw_user ))
+            BOSH_GW_PRIVATE_KEY:  (( grab meta.bosh-lite.gw_private_key ))
+            AWS_ACCESS_KEY:       (( grab meta.aws.access_key ))
+            AWS_SECRET_KEY:       (( grab meta.aws.secret_key ))
+            AWS_BUCKET:           (( grab meta.shield.bucket ))
+
+resources:
+  - name: git-shield
+    type: git
+    source:
+      uri:         https://github.com/starkandwayne/shield-boshrelease.git
+      branch:      links-and-cloud-config
+      private_key: (( grab meta.github.private_key ))

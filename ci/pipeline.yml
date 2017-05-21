@@ -34,10 +34,15 @@ meta:
     access_token: (( param "Please generate a Personal Access Token to be used for creating github releases (do you have a ci-bot?)" ))
 
   bosh-lite:
+    deployment: (( param "Please specify deployment name" ))
+    deployment-shield: (( param "Please specify deployment name for SHIELD deployment" ))
     bosh_environment: (( param "Please specify the BOSH target URI for the bosh-lite to run test deployments against" ))
     bosh_ca_cert: (( param "Please specify the root CA cert for target BOSH" ))
     bosh_client: admin
     bosh_client_secret: (( param "Please specify the BOSH admin password" ))
+    gw_host: (( param "Please specify BOSH gateway host for bosh2 logs" ))
+    gw_user: (( param "Please specify BOSH user for bosh2 logs" ))
+    gw_private_key: (( param "Please specify BOSH private key for bosh2 logs" ))
 
   slack:
     webhook:       (( param "Please specify your Slack Incoming Webhook Integration URL" ))
@@ -75,7 +80,7 @@ jobs:
     public: true
     plan:
     - aggregate:
-      - {get: git, passed: [image]}
+      - {get: git}
       - {get: docker-image-edge, passed: [image], trigger: true}
     - task: run-delmo-test
       config:
@@ -100,7 +105,7 @@ jobs:
 
         run:
           path: /entrypoint.sh
-          args: [delmo, --only-build-task, -f, git/image/tests/delmo.yml, -m, delmo-dingo-postgresql-pipeline]
+          args: [delmo, --only-build-task, -f, git/image/delmo.yml, -m, delmo-dingo-postgresql-pipeline]
 
   - name: testflight
     public: true
@@ -108,8 +113,8 @@ jobs:
     plan:
     - do:
       - aggregate:
-        - { get: git, trigger: true }
-        - { get: image, resource: docker-image-edge, passed: [image], params: {save: true}}
+        - { get: git }
+        - { get: image, resource: docker-image-edge, passed: [image], trigger: true, params: {save: true}}
       - task: testflight
         config:
           platform: linux
@@ -127,7 +132,11 @@ jobs:
             BOSH_CLIENT:          (( grab meta.bosh-lite.bosh_client ))
             BOSH_CLIENT_SECRET:   (( grab meta.bosh-lite.bosh_client_secret ))
             BOSH_DEPLOYMENT:      (( grab meta.bosh-lite.deployment ))
+            BOSH_GW_HOST:         (( grab meta.bosh-lite.gw_host ))
+            BOSH_GW_USER:         (( grab meta.bosh-lite.gw_user ))
+            BOSH_GW_PRIVATE_KEY:  (( grab meta.bosh-lite.gw_private_key ))
             TEST_ERRANDS:         (( grab meta.test-errands || ~ ))
+            SHIELD_DEPLOYMENT:    (( grab meta.bosh-lite.deployment-shield ))
       on_failure:
         put: notify
         params:

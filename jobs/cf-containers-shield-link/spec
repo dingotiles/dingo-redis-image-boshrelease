@@ -1,0 +1,32 @@
+---
+name: cf-containers-shield-link
+
+packages: [shield, jq]
+
+templates:
+  bin/ctl: bin/ctl
+  bin/monit_debugger: bin/monit_debugger
+  helpers/ctl_setup.sh: helpers/ctl_setup.sh
+  helpers/ctl_utils.sh: helpers/ctl_utils.sh
+
+# See https://bosh.io/docs/links.html
+consumes:
+- name: shield-daemon
+  type: shield-daemon
+  optional: true
+
+properties:
+  backups.schedule.name:
+    description: Default SHIELD schedule for all cf-containers-broker containers; defaults to first registered in SHIELD
+
+  backups.retention-policy.name:
+    description: Default SHIELD retention policy for all cf-containers-broker containers; defaults to first registered in SHIELD
+
+  backups.store.name:
+    description: Specify SHIELD store backend for all cf-containers-broker containers; else default to first available; defaults to first registered in SHIELD
+
+  shield-daemon.endpoint:
+    description: Explicit endpoint for SHIELD Daemon API (or see 'shield' link)
+
+  shield-daemon.provisioning_key:
+    description: "API Key to use when provisioning jobs, or targets"

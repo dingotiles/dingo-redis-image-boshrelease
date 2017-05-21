@@ -28,12 +28,6 @@ export BOSH_DEPLOYMENT=${BOSH_DEPLOYMENT:?required}
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-header "Importing image into release..."
-cp image/image-id     ${REPO_ROOT}/src/image-cache/
-cp image/repository   ${REPO_ROOT}/src/image-cache/
-cp image/tag          ${REPO_ROOT}/src/image-cache/
-gzip -c image/image > ${REPO_ROOT}/src/image-cache/image.tgz
-
 set -e
 cd ${REPO_ROOT}
 header "Pulling in any git submodules..."
@@ -54,57 +48,27 @@ cat > tmp/name.yml <<YAML
   path: /name
   value: ${BOSH_DEPLOYMENT:?required}
 YAML
+cat > tmp/amazon-s3.yml <<YAML
+s3-access-key: ${AWS_ACCESS_KEY}
+s3-secret-key: ${AWS_SECRET_KEY}
+s3-bucket:     ${AWS_BUCKET}
+s3-bucket-store-prefix: shield-backups/${BOSH_DEPLOYMENT}
+YAML
 
-bosh2 -n deploy manifests/docker-broker.yml \
-  -o manifests/operators/dingo-redis.yml \
-	--vars-store tmp/creds.yml \
-	-o manifests/operators/dingo-redis-image-tag.yml \
-	-v dingo-redis-image-tag=edge \
-	-o manifests/operators/dev.yml \
-	-o tmp/name.yml
-
-if [[ -n ${TEST_ERRANDS} ]]; then
-	for errand in ${TEST_ERRANDS}; do
-		header "Running '${errand}' errand"
-		bosh2 -n run-errand ${errand}
-	done
-fi
-
-header "Deploying with SHIELD integration..."
+header "Deploying SHIELD ${BOSH_DEPLOYMENT}..."
 
 # need to ensure shield defaults are in shield-daemon; or set them?
 # daily, shortterm - only create if missing
 
-cat > tmp/shield-deployment.yml <<YAML
----
-- type: replace
-  path: /instance_groups/name=docker/jobs/name=cf-containers-shield-link/consumes/shield-daemon/deployment
-  value: ${SHIELD_DEPLOYMENT}
-YAML
-
-bosh2 -n deploy manifests/docker-broker.yml \
-  -o manifests/operators/dingo-redis.yml \
+bosh2 -n deploy manifests/shield.yml \
 	--vars-store tmp/creds.yml \
-	-o manifests/operators/dingo-redis-image-tag.yml \
-	-v dingo-redis-image-tag=edge \
 	-o manifests/operators/dev.yml \
 	-o tmp/name.yml \
-	-o manifests/operators/shield.yml \
-	-o tmp/shield-deployment.yml || (
+	-o manifests/operators/store-amazon-s3.yml \
+	-l tmp/amazon-s3.yml || (
 		$DIR/show-deploy-logs
 		exit 1
 	)
-
-if [[ -n ${TEST_ERRANDS} ]]; then
-	for errand in ${TEST_ERRANDS}; do
-		header "Running '${errand}' errand"
-		bosh2 -n run-errand ${errand}
-	done
-fi
-
-header "Cleaning up..."
-bosh2 -n delete-deployment ${BOSH_LITE_DEPLOYMENT} --force || echo "continuing on..."
-bosh2 -n clean-up || echo "continuing on..."
 
 echo
 echo "SUCCESS"

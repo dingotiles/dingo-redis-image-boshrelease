@@ -57,3 +57,16 @@ bosh2 run-errand sanity-test
 ```
 
 This will interact directly with the service broker to provision and bind, and then set/get a value to the Redis service instance. Finally it will delete the service instance.
+
+### Backup & restore
+
+Dingo Redis is designed to be integrated with [SHIELD](https://github.com/starkandwayne/shield). Upon provisioning each service instance, the Redis cluster becomes registered as a target for regular backups.
+
+Assuming you have SHIELD deployed on the same BOSH director, then the `manifests/operators/shield.yml` operator below will automatically configure Dingo Redis to integrate with it:
+
+```
+bosh2 deploy manifests/docker-broker.yml \
+  -o manifests/operators/dingo-redis.yml \
+  -o manifests/operators/shield.yml \
+  --vars-store tmp/creds.yml
+```
