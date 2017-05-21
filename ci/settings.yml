@@ -43,6 +43,8 @@ meta:
     secret_key: (( vault "secret/pipelines/" meta.github.repo "/delmo:secret_key"))
     region: (( vault "secret/pipelines/" meta.github.repo "/delmo:region"))
     bucket: (( vault "secret/pipelines/" meta.github.repo "/delmo:bucket"))
+  shield:
+    bucket: dingo-redis-image-boshrelease
   slack:
     channel: Please specify the channel (#name) or user (@user) to send messages to
     webhook: Please specify your Slack Incoming Webhook Integration URL
@@ -81,6 +83,9 @@ jobs:
             BOSH_GW_HOST:         (( grab meta.bosh-lite.gw_host ))
             BOSH_GW_USER:         (( grab meta.bosh-lite.gw_user ))
             BOSH_GW_PRIVATE_KEY:  (( grab meta.bosh-lite.gw_private_key ))
+            AWS_ACCESS_KEY:       (( grab meta.aws.access_key ))
+            AWS_SECRET_KEY:       (( grab meta.aws.secret_key ))
+            AWS_BUCKET:           (( grab meta.shield.bucket ))
 
 resources:
   - name: git-shield

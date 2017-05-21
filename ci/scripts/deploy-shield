@@ -48,6 +48,12 @@ cat > tmp/name.yml <<YAML
   path: /name
   value: ${BOSH_DEPLOYMENT:?required}
 YAML
+cat > tmp/amazon-s3.yml <<YAML
+s3-access-key: ${AWS_ACCESS_KEY}
+s3-secret-key: ${AWS_SECRET_KEY}
+s3-bucket:     ${AWS_BUCKET}
+s3-bucket-store-prefix: shield-backups/${BOSH_DEPLOYMENT}
+YAML
 
 header "Deploying SHIELD ${BOSH_DEPLOYMENT}..."
 
@@ -58,7 +64,8 @@ bosh2 -n deploy manifests/shield.yml \
 	--vars-store tmp/creds.yml \
 	-o manifests/operators/dev.yml \
 	-o tmp/name.yml \
-	-o manifests/operators/store-local.yml || (
+	-o manifests/operators/store-amazon-s3.yml \
+	-l tmp/amazon-s3.yml || (
 		$DIR/show-deploy-logs
 		exit 1
 	)
