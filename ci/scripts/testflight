@@ -55,20 +55,20 @@ cat > tmp/name.yml <<YAML
   value: ${BOSH_DEPLOYMENT:?required}
 YAML
 
-# bosh2 -n deploy manifests/docker-broker.yml \
-#   -o manifests/operators/dingo-redis.yml \
-# 	--vars-store tmp/creds.yml \
-# 	-o manifests/operators/dingo-redis-image-tag.yml \
-# 	-v dingo-redis-image-tag=edge \
-# 	-o manifests/operators/dev.yml \
-# 	-o tmp/name.yml
-#
-# if [[ -n ${TEST_ERRANDS} ]]; then
-# 	for errand in ${TEST_ERRANDS}; do
-# 		header "Running '${errand}' errand"
-# 		bosh2 -n run-errand ${errand}
-# 	done
-# fi
+bosh2 -n deploy manifests/docker-broker.yml \
+  -o manifests/operators/dingo-redis.yml \
+	--vars-store tmp/creds.yml \
+	-o manifests/operators/dingo-redis-image-tag.yml \
+	-v dingo-redis-image-tag=edge \
+	-o manifests/operators/dev.yml \
+	-o tmp/name.yml
+
+if [[ -n ${TEST_ERRANDS} ]]; then
+	for errand in ${TEST_ERRANDS}; do
+		header "Running '${errand}' errand"
+		bosh2 -n run-errand ${errand}
+	done
+fi
 
 header "Deploying with SHIELD integration..."
 
