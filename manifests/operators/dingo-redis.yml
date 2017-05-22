@@ -56,7 +56,7 @@
         backend: 'docker'
         image: 'dingotiles/dingo-redis'
         tag: 'latest'
-        persistent_volumes: [/data]
+        persistent_volumes: [/hab/svc/redis/data]
       credentials:
         password:
           key: 'REDIS_PASSWORD'
