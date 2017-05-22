@@ -3,6 +3,8 @@
 set -u
 set -x
 
+instance_id=$1
+
 <%
   broker = link("servicebroker")
   username = broker.p('username')
@@ -12,7 +14,6 @@ set -x
 -%>
 broker_url='<%= "#{broker_url}" %>'
 
-instance_id=$1
 echo deleting ${instance_id}
 curl ${broker_url}/v2/service_instances/${instance_id}\?plan_id=unknown\&service_id=unknown -XDELETE
 

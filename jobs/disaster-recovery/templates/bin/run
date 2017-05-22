@@ -2,7 +2,6 @@
 
 set -e # exit immediately if a simple command exits with a non-zero status
 set -u # report the usage of uninitialized variables
-set -x # show commands
 
 export PATH=$PATH:/var/vcap/packages/cf-cli/bin
 export PATH=$PATH:/var/vcap/packages/jq/bin
@@ -23,6 +22,8 @@ broker_uri='<%= broker_uri %>'
 echo Looking up service IDs
 catalog=$(curl -sf ${broker_uri}/v2/catalog)
 root_service_id=$(echo $catalog | jq -r ".services[0].id")
+
+set -x # show commands
 
 next_url=/v2/services
 while [[ "${next_url}" != "null" ]]; do
