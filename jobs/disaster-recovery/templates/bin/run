@@ -23,8 +23,6 @@ echo Looking up service IDs
 catalog=$(curl -sf ${broker_uri}/v2/catalog)
 root_service_id=$(echo $catalog | jq -r ".services[0].id")
 
-set -x # show commands
-
 next_url=/v2/services
 while [[ "${next_url}" != "null" ]]; do
   echo Loading page of services ${next_url} >&2
