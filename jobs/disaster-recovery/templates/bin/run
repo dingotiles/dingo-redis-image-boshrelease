@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e # exit immediately if a simple command exits with a non-zero status
+set -u # report the usage of uninitialized variables
+set -x # show commands
+
+export PATH=$PATH:/var/vcap/packages/cf-cli/bin
+export PATH=$PATH:/var/vcap/packages/jq/bin
+export PATH=$PATH:/var/vcap/jobs/disaster-recovery/bin
+
+cf api <%= p('cf.api_url') %> <%= p("cf.skip_ssl_validation") ? "--skip-ssl-validation" : "" %>
+cf auth <%= p('cf.admin_username') %> <%= p('cf.admin_password') %>
+
+<%
+  broker = link("servicebroker")
+  username = broker.p('username')
+  password = broker.p('password')
+  port = broker.p('port')
+  broker_url = "http://#{username}:#{password}@#{broker.instances.first.address}:#{port}"
+-%>
+broker_url='<%= "#{broker_url}" %>'
+
+echo Looking up service IDs
+catalog=$(curl -sf ${broker_uri}/v2/catalog)
+root_service_id=$(echo $catalog | jq -r ".services[0].id")
+
+next_url=/v2/services
+while [[ "${next_url}" != "null" ]]; do
+  echo Loading page of services ${next_url} >&2
+  services=$(cf curl "${next_url}" | jq -r ".resources[]" | jq -r "select(.entity.unique_id | test(\"^${root_service_id}\"))")
+  if [[ "${services}" != "null" ]]; then
+    service_guids=$(echo ${services} | jq -r ".metadata.guid")
+    for service_guid in $service_guids; do
+      service=$(cf curl /v2/services/${service_guid})
+      service_label=$(echo $service | jq -r ".entity.label")
+      echo Restoring all service instances for all plans for $service_label >&2
+      cf curl /v2/services/${service_guid}/service_plans | \
+        jq -r ".resources[].entity.service_instances_url" | \
+        xargs -L1 cf curl | \
+        jq -r ".resources[].metadata.guid" | \
+        xargs -L1 restore_service_instance
+    done
+  fi
+  next_url=$(cf curl "${next_url}" | jq -r -c ".next_url")
+done

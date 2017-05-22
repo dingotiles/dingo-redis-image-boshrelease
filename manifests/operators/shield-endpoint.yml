@@ -8,3 +8,8 @@
       shield-daemon:
         endpoint: ((shield-daemon-endpoint))
         provisioning_key: ((shield-daemon-provisioning-key))
+      cf:
+        api_url: ((cf-api-url))
+        admin_username: ((cf-admin-username))
+        admin_password: ((cf-admin-password))
+        skip_ssl_validation: ((cf-skip-ssl-validation))

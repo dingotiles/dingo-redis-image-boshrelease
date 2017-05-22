@@ -54,6 +54,14 @@ cat > tmp/name.yml <<YAML
   path: /name
   value: ${BOSH_DEPLOYMENT:?required}
 YAML
+cat > tmp/vars.yml <<YAML
+---
+cf-system-domain: ${CF_SYSTEM_DOMAIN:?required}
+cf-api-url: ${CF_API_URL:?required}
+cf-admin-username: ${CF_USERNAME:?required}
+cf-admin-password: ${CF_PASSWORD:?required}
+cf-skip-ssl-validation: ${CF_SKIP_SSL_VALIDATION:?required}
+YAML
 
 bosh2 -n deploy manifests/docker-broker.yml \
   -o manifests/operators/dingo-redis.yml \
@@ -61,7 +69,8 @@ bosh2 -n deploy manifests/docker-broker.yml \
 	-o manifests/operators/dingo-redis-image-tag.yml \
 	-v dingo-redis-image-tag=edge \
 	-o manifests/operators/dev.yml \
-	-o tmp/name.yml
+	-o tmp/name.yml \
+	-l tmp/vars.yml
 
 if [[ -n ${TEST_ERRANDS} ]]; then
 	for errand in ${TEST_ERRANDS}; do
@@ -89,6 +98,7 @@ bosh2 -n deploy manifests/docker-broker.yml \
 	-v dingo-redis-image-tag=edge \
 	-o manifests/operators/dev.yml \
 	-o tmp/name.yml \
+	-l tmp/vars.yml \
 	-o manifests/operators/shield-linked.yml \
 	-o tmp/shield-deployment.yml || (
 		$DIR/show-deploy-logs

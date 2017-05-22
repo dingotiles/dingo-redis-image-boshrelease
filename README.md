@@ -66,7 +66,11 @@ Assuming you have SHIELD deployed on the same BOSH director, then the `manifests
 
 ```
 bosh2 deploy manifests/docker-broker.yml \
+  --vars-store tmp/creds.yml \
   -o manifests/operators/dingo-redis.yml \
   -o manifests/operators/shield-linked.yml \
-  --vars-store tmp/creds.yml
+    -v cf-api-url=... \
+    -v cf-admin-username=admin \
+    -v cf-admin-password=... \
+    -v cf-skip-ssl-validation=false
 ```

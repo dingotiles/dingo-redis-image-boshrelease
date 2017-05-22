@@ -8,3 +8,9 @@
       shield-daemon:
         deployment: shield
         from: shield-daemon
+    properties:
+      cf:
+        api_url: ((cf-api-url))
+        admin_username: ((cf-admin-username))
+        admin_password: ((cf-admin-password))
+        skip_ssl_validation: ((cf-skip-ssl-validation))
