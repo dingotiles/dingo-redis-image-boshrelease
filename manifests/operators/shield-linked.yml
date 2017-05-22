@@ -8,9 +8,26 @@
       shield-daemon:
         deployment: shield
         from: shield-daemon
-    properties:
-      cf:
-        api_url: ((cf-api-url))
-        admin_username: ((cf-admin-username))
-        admin_password: ((cf-admin-password))
-        skip_ssl_validation: ((cf-skip-ssl-validation))
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: disaster-recovery
+    lifecycle: errand
+    azs: [z1]
+    instances: 1
+    vm_type: default
+    stemcell: default
+    networks: [{name: default}]
+    jobs:
+    - name: disaster-recovery
+      release: dingo-redis-image
+      consumes:
+        servicebroker:
+          from: broker
+      properties:
+        cf:
+          api_url: ((cf-api-url))
+          admin_username: ((cf-admin-username))
+          admin_password: ((cf-admin-password))
+          skip_ssl_validation: ((cf-skip-ssl-validation))
