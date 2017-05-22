@@ -1,0 +1,42 @@
+name: dingo-redis-image
+version: 1.2.1
+commit_hash: "6625602"
+uncommitted_changes: false
+jobs:
+- name: cf-containers-shield-link
+  version: 386e6ff2717d6291c2b47b1daf74ac3400b4f5c1
+  fingerprint: 386e6ff2717d6291c2b47b1daf74ac3400b4f5c1
+  sha1: eaba5affb52cd6521dbc5fdbae696d7ba532055f
+- name: dingo-redis-image
+  version: 9d6fdc4a15197dd2483cb4d0a3d1d300df613ff9
+  fingerprint: 9d6fdc4a15197dd2483cb4d0a3d1d300df613ff9
+  sha1: 638ff1a1494bdc22b4b215091c72fe510375e849
+- name: disaster-recovery
+  version: f5dec9efb7adac08348f72489fea55e211094bd7
+  fingerprint: f5dec9efb7adac08348f72489fea55e211094bd7
+  sha1: 98a0d9b2dccb57cd75d75d98000aac7600663ff7
+packages:
+- name: cf-cli
+  version: 2de94a725f34d2f6a3636744fe1a0dd4eed62fce
+  fingerprint: 2de94a725f34d2f6a3636744fe1a0dd4eed62fce
+  sha1: 79cf9907642fa9a89bf73f4576c6104d87e10e9a
+  dependencies: []
+- name: dingotiles_dingo_redis_image
+  version: 28a3a8709eeeac009e832c815bcc653058bb83df
+  fingerprint: 28a3a8709eeeac009e832c815bcc653058bb83df
+  sha1: 521d0a15853eee62e557857914637359892c1f14
+  dependencies: []
+- name: jq
+  version: 8fb9f39ec428414c6f9752b3decf72cad4754707
+  fingerprint: 8fb9f39ec428414c6f9752b3decf72cad4754707
+  sha1: 5a7a651c68917b4229f7110d39f4dfa4ce520ac6
+  dependencies: []
+- name: shield
+  version: 63d78bbedce864d41f1a5b9f52b39808e85d781f
+  fingerprint: 63d78bbedce864d41f1a5b9f52b39808e85d781f
+  sha1: b4c6c3f6a14affc4a035ebfcf38ec473e86bf51c
+  dependencies: []
+license:
+  version: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  fingerprint: ac77a509d8b020148f8ce7b3ecce592f89c29c87
+  sha1: e56c2ef4aba5007fd0d1cede2c0fc785fc20732e
