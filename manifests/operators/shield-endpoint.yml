@@ -1,0 +1,10 @@
+---
+- type: replace
+  path: /instance_groups/name=docker/jobs/-
+  value:
+    name: cf-containers-shield-link
+    release: dingo-redis-image
+    properties:
+      shield-daemon:
+        endpoint: ((shield-daemon-endpoint))
+        provisioning_key: ((shield-daemon-provisioning-key))
