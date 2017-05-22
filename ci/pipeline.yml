@@ -114,7 +114,7 @@ jobs:
     - do:
       - aggregate:
         - { get: git }
-        - { get: image, resource: docker-image-edge, passed: [image], trigger: true, params: {save: true}}
+        - { get: image, resource: docker-image-edge, passed: [delmo], trigger: true, params: {save: true}}
       - task: testflight
         config:
           platform: linux
@@ -157,6 +157,7 @@ jobs:
       - aggregate:
           - { get: git,     trigger: true,  passed: [testflight] }
           - { get: version, trigger: true, params: {pre: rc} }
+          - { get: docker-image-edge, passed: [testflight] }
       - put: version
         params: {file: version/number}
       on_failure:
@@ -203,7 +204,7 @@ jobs:
       - aggregate:
           - { get: version, passed: [rc], params: {bump: final} }
           - { get: git, passed: [rc] }
-          - { get: docker-image-edge, passed: [image], params: {save: true}}
+          - { get: docker-image-edge, passed: [rc], params: {save: true}}
       - put: docker-image-latest
         params:
           load: docker-image-edge
