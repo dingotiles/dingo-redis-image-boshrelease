@@ -16,9 +16,9 @@ cf auth <%= p('cf.admin_username') %> <%= p('cf.admin_password') %>
   username = broker.p('username')
   password = broker.p('password')
   port = broker.p('port')
-  broker_url = "http://#{username}:#{password}@#{broker.instances.first.address}:#{port}"
+  broker_uri = "http://#{username}:#{password}@#{broker.instances.first.address}:#{port}"
 -%>
-broker_url='<%= "#{broker_url}" %>'
+broker_uri='<%= broker_uri %>'
 
 echo Looking up service IDs
 catalog=$(curl -sf ${broker_uri}/v2/catalog)
