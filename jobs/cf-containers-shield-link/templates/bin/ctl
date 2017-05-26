@@ -94,7 +94,7 @@ case $1 in
 
     echo "<%= spec.address %>" > DOCKER_HOST_IP
 
-    tail -f /dev/null
+    exec tail -f /dev/null
 
     ;;
 
