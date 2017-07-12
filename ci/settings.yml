@@ -66,7 +66,7 @@ jobs:
       - task: deploy-shield
         config:
           platform: linux
-          rootfs_uri: (( grab meta.image ))
+          image_resource: (( grab meta.image ))
           inputs:
             - { name: git }
             - { name: git-shield }
